@@ -1,1182 +1,714 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lendas em Movimento</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --senna-main: #009c3b;
-      --senna-accent: #FFDF00;
-      --senna-dark: #004d1c;
-      --hamilton-main: #00D2BE;
-      --hamilton-accent: #e8e8e8;
-      --hamilton-dark: #005a52;
-      --shawn-main: #c8913a;
-      --shawn-accent: #f5d89e;
-      --shawn-dark: #6b4a14;
-      --bg: #0d0d0d;
-      --surface: #161616;
-      --surface2: #1e1e1e;
-      --text: #f0ede8;
-      --muted: #888;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Raleway', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(0,156,59,.18) 0%, transparent 60%),
-        radial-gradient(ellipse 70% 50% at 80% 60%, rgba(0,210,190,.12) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 50% 80%, rgba(200,145,58,.12) 0%, transparent 60%);
-      animation: bgPulse 8s ease-in-out infinite alternate;
-    }
-
-    @keyframes bgPulse {
-      from { opacity: .7; }
-      to   { opacity: 1; }
-    }
-
-    .hero-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-
-    .hero-content {
-      position: relative; z-index: 2;
-      text-align: center;
-    }
-
-    .hero-eyebrow {
-      font-family: 'Raleway', sans-serif;
-      font-size: .75rem;
-      font-weight: 600;
-      letter-spacing: .35em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp .8s .2s forwards;
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 9vw, 7.5rem);
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -.02em;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-title span {
-      display: block;
-      opacity: 0;
-      animation: fadeUp .9s forwards;
-    }
-    .hero-title span:nth-child(1) { animation-delay: .4s; color: var(--senna-accent); }
-    .hero-title span:nth-child(2) { animation-delay: .6s; color: var(--hamilton-main); }
-    .hero-title span:nth-child(3) { animation-delay: .8s; color: var(--shawn-main); }
-
-    .hero-sub {
-      font-size: 1rem;
-      color: var(--muted);
-      font-weight: 300;
-      letter-spacing: .08em;
-      opacity: 0;
-      animation: fadeUp .8s 1s forwards;
-      margin-bottom: 3rem;
-    }
-
-    .hero-scroll {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: .5rem;
-      opacity: 0;
-      animation: fadeUp .8s 1.3s forwards;
-      cursor: pointer;
-    }
-
-    .hero-scroll span {
-      font-size: .65rem;
-      letter-spacing: .3em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .scroll-line {
-      width: 1px;
-      height: 50px;
-      background: linear-gradient(to bottom, var(--muted), transparent);
-      animation: scrollLine 1.5s ease-in-out infinite;
-    }
-
-    @keyframes scrollLine {
-      0%, 100% { transform: scaleY(1); opacity: 1; }
-      50%       { transform: scaleY(.5); opacity: .4; }
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(13,13,13,.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-
-    .nav-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 2rem;
-    }
-
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: .05em;
-      color: var(--text);
-    }
-
-    .nav-tabs {
-      display: flex;
-      gap: .25rem;
-    }
-
-    .nav-tab {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: .5rem 1.25rem;
-      font-family: 'Raleway', sans-serif;
-      font-size: .8rem;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border-radius: 2px;
-      transition: color .3s, background .3s;
-      position: relative;
-    }
-
-    .nav-tab::after {
-      content: '';
-      position: absolute;
-      bottom: -1px; left: 0; right: 0;
-      height: 2px;
-      transform: scaleX(0);
-      transition: transform .3s;
-    }
-
-    .nav-tab[data-pilot="senna"]::after   { background: var(--senna-accent); }
-    .nav-tab[data-pilot="hamilton"]::after { background: var(--hamilton-main); }
-    .nav-tab[data-pilot="shawn"]::after   { background: var(--shawn-main); }
-
-    .nav-tab.active[data-pilot="senna"]   { color: var(--senna-accent); }
-    .nav-tab.active[data-pilot="hamilton"] { color: var(--hamilton-main); }
-    .nav-tab.active[data-pilot="shawn"]   { color: var(--shawn-main); }
-    .nav-tab.active::after { transform: scaleX(1); }
-
-    /* ── SECTIONS ── */
-    .pilot-section {
-      display: none;
-    }
-    .pilot-section.active { display: block; }
-
-    /* ── PROFILE HEADER ── */
-    .profile-header {
-      position: relative;
-      overflow: hidden;
-      padding: 5rem 2rem 4rem;
-    }
-
-    .profile-header-bg {
-      position: absolute; inset: 0;
-      opacity: .07;
-      background-size: cover;
-      background-position: center top;
-      filter: grayscale(100%);
-    }
-
-    .senna-bg   { background: radial-gradient(ellipse at top right, var(--senna-main), transparent 70%); }
-    .hamilton-bg { background: radial-gradient(ellipse at top right, var(--hamilton-main), transparent 70%); }
-    .shawn-bg   { background: radial-gradient(ellipse at top right, var(--shawn-main), transparent 70%); }
-
-    .profile-header-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 4rem;
-      align-items: end;
-      position: relative; z-index: 2;
-    }
-
-    .profile-image-wrap {
-      position: relative;
-    }
-
-    .profile-image-wrap::before {
-      content: '';
-      position: absolute;
-      inset: -8px;
-      border-radius: 4px;
-      opacity: .4;
-    }
-
-    .senna-section   .profile-image-wrap::before { background: linear-gradient(135deg, var(--senna-main), var(--senna-accent)); }
-    .hamilton-section .profile-image-wrap::before { background: linear-gradient(135deg, var(--hamilton-main), var(--hamilton-dark)); }
-    .shawn-section   .profile-image-wrap::before { background: linear-gradient(135deg, var(--shawn-main), var(--shawn-accent)); }
-
-    .profile-image {
-      width: 100%;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      object-position: top;
-      border-radius: 3px;
-      display: block;
-      position: relative;
-      z-index: 1;
-      filter: grayscale(20%) contrast(1.05);
-    }
-
-    .profile-badge {
-      position: absolute;
-      bottom: -1rem; right: -1rem;
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 900;
-    }
-
-    .senna-section   .profile-badge { background: var(--senna-accent); color: var(--senna-dark); }
-    .hamilton-section .profile-badge { background: var(--hamilton-main); color: var(--hamilton-dark); }
-    .shawn-section   .profile-badge { background: var(--shawn-main); color: #fff; }
-
-    .profile-info { padding-bottom: 1rem; }
-
-    .profile-category {
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .35em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
-
-    .senna-section   .profile-category { color: var(--senna-main); }
-    .hamilton-section .profile-category { color: var(--hamilton-main); }
-    .shawn-section   .profile-category { color: var(--shawn-main); }
-
-    .profile-name {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 900;
-      line-height: 1.05;
-      margin-bottom: 1.5rem;
-    }
-
-    .profile-tagline {
-      font-size: 1.05rem;
-      color: var(--muted);
-      font-weight: 300;
-      line-height: 1.7;
-      max-width: 500px;
-      margin-bottom: 2rem;
-    }
-
-    .profile-stats {
-      display: flex;
-      gap: 2.5rem;
-    }
-
-    .stat { display: flex; flex-direction: column; gap: .3rem; }
-
-    .stat-value {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 900;
-    }
-
-    .senna-section   .stat-value { color: var(--senna-accent); }
-    .hamilton-section .stat-value { color: var(--hamilton-main); }
-    .shawn-section   .stat-value { color: var(--shawn-main); }
-
-    .stat-label {
-      font-size: .65rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    /* ── DIVIDER ── */
-    .section-divider {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    .divider-line {
-      height: 1px;
-      background: rgba(255,255,255,.08);
-    }
-
-    /* ── TIMELINE ── */
-    .timeline-section {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 5rem 2rem;
-    }
-
-    .section-label {
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .35em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: .75rem;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 3.5rem;
-    }
-
-    .timeline {
-      position: relative;
-      padding-left: 2rem;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 1px;
-      background: rgba(255,255,255,.08);
-    }
-
-    .timeline-item {
-      position: relative;
-      padding: 0 0 3rem 2.5rem;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: opacity .6s, transform .6s;
-    }
-
-    .timeline-item.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .timeline-dot {
-      position: absolute;
-      left: -6px; top: 4px;
-      width: 13px; height: 13px;
-      border-radius: 50%;
-      border: 2px solid var(--bg);
-    }
-
-    .senna-section   .timeline-dot { background: var(--senna-accent); }
-    .hamilton-section .timeline-dot { background: var(--hamilton-main); }
-    .shawn-section   .timeline-dot { background: var(--shawn-main); }
-
-    .timeline-year {
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      margin-bottom: .5rem;
-    }
-
-    .senna-section   .timeline-year { color: var(--senna-main); }
-    .hamilton-section .timeline-year { color: var(--hamilton-main); }
-    .shawn-section   .timeline-year { color: var(--shawn-main); }
-
-    .timeline-event-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: .5rem;
-    }
-
-    .timeline-event-desc {
-      font-size: .9rem;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 600px;
-    }
-
-    .timeline-item.highlight .timeline-event-title {
-      font-size: 1.35rem;
-    }
-
-    .timeline-item.highlight .timeline-dot {
-      width: 17px; height: 17px;
-      left: -8px;
-    }
-
-    /* ── OPINION ── */
-    .opinion-section {
-      padding: 5rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .opinion-bg {
-      position: absolute; inset: 0;
-      opacity: .04;
-    }
-
-    .senna-section   .opinion-bg { background: radial-gradient(ellipse at center, var(--senna-main), transparent 70%); }
-    .hamilton-section .opinion-bg { background: radial-gradient(ellipse at center, var(--hamilton-main), transparent 70%); }
-    .shawn-section   .opinion-bg { background: radial-gradient(ellipse at center, var(--shawn-main), transparent 70%); }
-
-    .opinion-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-      position: relative; z-index: 2;
-    }
-
-    blockquote {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.3rem, 2.5vw, 1.7rem);
-      font-style: italic;
-      line-height: 1.6;
-      color: var(--text);
-      position: relative;
-      padding-left: 2rem;
-    }
-
-    blockquote::before {
-      content: '"';
-      position: absolute;
-      left: 0; top: -.3em;
-      font-size: 5rem;
-      line-height: 1;
-      font-family: 'Playfair Display', serif;
-      opacity: .2;
-    }
-
-    .senna-section   blockquote { border-left: 3px solid var(--senna-accent); }
-    .hamilton-section blockquote { border-left: 3px solid var(--hamilton-main); }
-    .shawn-section   blockquote { border-left: 3px solid var(--shawn-main); }
-
-    blockquote cite {
-      display: block;
-      margin-top: 1rem;
-      font-style: normal;
-      font-family: 'Raleway', sans-serif;
-      font-size: .75rem;
-      font-weight: 600;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .opinion-text { }
-
-    .opinion-text p {
-      font-size: .95rem;
-      color: var(--muted);
-      line-height: 1.85;
-      margin-bottom: 1.25rem;
-    }
-
-    .opinion-text p:last-child { margin-bottom: 0; }
-
-    .opinion-highlight {
-      font-size: 1.05rem !important;
-      color: var(--text) !important;
-      font-weight: 500;
-    }
-
-    /* ── DECORATIVE ELEMENTS ── */
-    .deco-flag {
-      position: absolute;
-      right: 2rem; top: 2rem;
-      width: 60px;
-      opacity: .15;
-    }
-
-    .deco-number {
-      position: absolute;
-      right: 2rem; bottom: 2rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 8rem;
-      font-weight: 900;
-      line-height: 1;
-      opacity: .04;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid rgba(255,255,255,.06);
-      padding: 2rem;
-      text-align: center;
-    }
-
-    footer p {
-      font-size: .75rem;
-      color: var(--muted);
-      letter-spacing: .1em;
-    }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity .7s, transform .7s;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── RACING DECORATION (Senna) ── */
-    .senna-deco {
-      position: absolute;
-      right: 0; top: 50%;
-      transform: translateY(-50%);
-      width: 200px;
-      opacity: .05;
-      pointer-events: none;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .profile-header-inner {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      .profile-image-wrap {
-        max-width: 260px;
-        margin: 0 auto;
-      }
-      .opinion-inner {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-      }
-      .profile-stats { flex-wrap: wrap; gap: 1.5rem; }
-      .nav-tab { padding: .5rem .8rem; font-size: .7rem; }
-    }
-
-    /* ── CHECKERED FLAG DECORATION ── */
-    .checkered {
-      position: absolute;
-      top: 0; right: 0;
-      width: 120px; height: 120px;
-      opacity: .06;
-      background-image:
-        repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%);
-      background-size: 20px 20px;
-    }
-
-    /* ── MUSIC NOTE DECORATION ── */
-    .music-deco {
-      position: absolute;
-      right: 3rem; top: 50%;
-      transform: translateY(-50%);
-      font-size: 10rem;
-      opacity: .04;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    /* ── PILL TAGS ── */
-    .tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .5rem;
-      margin-top: 1.5rem;
-    }
-
-    .tag {
-      font-size: .65rem;
-      font-weight: 700;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      padding: .3rem .8rem;
-      border-radius: 100px;
-      border: 1px solid;
-    }
-
-    .senna-section   .tag { border-color: var(--senna-main); color: var(--senna-accent); }
-    .hamilton-section .tag { border-color: var(--hamilton-dark); color: var(--hamilton-main); }
-    .shawn-section   .tag { border-color: var(--shawn-dark); color: var(--shawn-accent); }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lendas em Movimento</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--text:#f2ede6;--muted:#777;
+  --s1:#009c3b;--s2:#FFDF00;--s3:#002776;
+  --h1:#00D2BE;--h2:#c0c0c0;--h3:#005a52;
+  --m1:#c8913a;--m2:#f5d89e;--m3:#3d2b00;
+  --l1:#DC0000;--l2:#e8c43c;--l3:#7a0000;
+}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--muted)}
+
+/* ── HERO ── */
+.hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:80px 80px}
+.hglows{position:absolute;inset:0;pointer-events:none}
+.hglows span{position:absolute;border-radius:50%;filter:blur(130px);animation:glow 7s ease-in-out infinite alternate}
+.hglows span:nth-child(1){width:420px;height:420px;background:rgba(0,156,59,.18);left:-15%;top:-10%;animation-delay:0s}
+.hglows span:nth-child(2){width:380px;height:380px;background:rgba(0,210,190,.13);right:-10%;bottom:5%;animation-delay:2.5s}
+.hglows span:nth-child(3){width:330px;height:330px;background:rgba(200,145,58,.12);left:35%;bottom:-15%;animation-delay:5s}
+.hglows span:nth-child(4){width:350px;height:350px;background:rgba(220,0,0,.12);right:30%;top:-10%;animation-delay:3.5s}
+@keyframes glow{from{opacity:.4;transform:scale(1)}to{opacity:1;transform:scale(1.25)}}
+.hero-content{position:relative;z-index:2;text-align:center;padding:2rem}
+.hero-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.5em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,10vw,8.5rem);font-weight:900;line-height:.9;letter-spacing:-.03em;margin-bottom:2.5rem}
+.hero-title .line{display:block;opacity:0;animation:lineIn 1s forwards;cursor:pointer;transition:opacity .2s}
+.hero-title .line:hover{opacity:.65}
+.hero-title .line:nth-child(1){animation-delay:.5s;color:var(--s2)}
+.hero-title .line:nth-child(2){animation-delay:.72s;color:var(--h1)}
+.hero-title .line:nth-child(3){animation-delay:.94s;color:var(--m1)}
+.hero-title .line:nth-child(4){animation-delay:1.16s;color:var(--l1)}
+@keyframes lineIn{from{opacity:0;transform:translateX(-50px) skewX(-6deg)}to{opacity:1;transform:none}}
+.hero-sub{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeUp .8s 1.5s forwards;margin-bottom:3rem}
+.hero-dots{display:flex;gap:1.5rem;justify-content:center;opacity:0;animation:fadeUp .8s 1.8s forwards}
+.hdot{width:8px;height:8px;border-radius:50%;cursor:pointer;transition:transform .3s}
+.hdot:nth-child(1){background:var(--s2)}.hdot:nth-child(2){background:var(--h1)}.hdot:nth-child(3){background:var(--m1)}.hdot:nth-child(4){background:var(--l1)}
+.hdot:hover{transform:scale(2.2)}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeUp .8s 2.2s forwards;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.hero-scroll span{font-size:.55rem;letter-spacing:.4em;text-transform:uppercase;color:var(--muted)}
+.mouse{width:22px;height:34px;border:1.5px solid rgba(255,255,255,.25);border-radius:11px;display:flex;justify-content:center;padding-top:5px}
+.wheel{width:2px;height:6px;background:rgba(255,255,255,.4);border-radius:1px;animation:wh 1.5s ease-in-out infinite}
+@keyframes wh{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(6px);opacity:.2}}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(10,10,10,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2rem}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.nav-tabs{display:flex;gap:3px}
+.nav-tab{background:none;border:1px solid transparent;cursor:pointer;padding:.4rem 1rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-radius:2px;transition:all .25s}
+.nav-tab:hover{color:var(--text)}
+.nav-tab[data-p="senna"].active{color:var(--s2);border-color:rgba(255,223,0,.3);background:rgba(255,223,0,.05)}
+.nav-tab[data-p="hamilton"].active{color:var(--h1);border-color:rgba(0,210,190,.3);background:rgba(0,210,190,.05)}
+.nav-tab[data-p="shawn"].active{color:var(--m1);border-color:rgba(200,145,58,.3);background:rgba(200,145,58,.05)}
+.nav-tab[data-p="leclerc"].active{color:var(--l1);border-color:rgba(220,0,0,.3);background:rgba(220,0,0,.05)}
+
+/* ── SECTIONS ── */
+.psec{display:none}.psec.active{display:block}
+
+/* ── PROFILE HERO ── */
+.phero{position:relative;min-height:92vh;display:flex;align-items:flex-end;overflow:hidden}
+.phero-img{position:absolute;right:0;top:0;height:100%;width:55%;object-fit:cover;object-position:top center;filter:grayscale(12%) contrast(1.08)}
+.phero-fade{position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 30%,rgba(10,10,10,.7) 60%,rgba(10,10,10,.35) 100%)}
+.phero-bottom{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,var(--bg),transparent)}
+.emblem{position:absolute;top:2rem;right:2.5rem;font-family:'Playfair Display',serif;font-size:13rem;font-weight:900;line-height:1;opacity:.04;pointer-events:none;user-select:none;z-index:1}
+.phero-content{position:relative;z-index:3;padding:5rem 2rem 5rem;max-width:1200px;margin:0 auto;width:100%}
+.p-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.5em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem}
+.p-eyebrow::before{content:'';width:25px;height:1px;display:block}
+.senna-section .p-eyebrow{color:var(--s1)}.senna-section .p-eyebrow::before{background:var(--s1)}
+.hamilton-section .p-eyebrow{color:var(--h1)}.hamilton-section .p-eyebrow::before{background:var(--h1)}
+.shawn-section .p-eyebrow{color:var(--m1)}.shawn-section .p-eyebrow::before{background:var(--m1)}
+.leclerc-section .p-eyebrow{color:var(--l1)}.leclerc-section .p-eyebrow::before{background:var(--l1)}
+.p-name{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,7vw,7.5rem);font-weight:900;line-height:.9;margin-bottom:2rem;letter-spacing:-.03em}
+.p-name em{font-style:italic;display:block}
+.p-tagline{font-size:.95rem;color:rgba(242,237,230,.55);font-weight:300;line-height:1.85;max-width:480px;margin-bottom:2.5rem}
+.nbadge{display:inline-flex;align-items:center;gap:.5rem;padding:.3rem .8rem;border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.stats-bar{display:flex;gap:0;border:1px solid rgba(255,255,255,.08);width:fit-content;overflow:hidden;border-radius:2px}
+.stat-item{padding:.85rem 1.5rem;border-right:1px solid rgba(255,255,255,.08)}
+.stat-item:last-child{border-right:none}
+.stat-n{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1;display:block}
+.stat-l{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-top:.2rem}
+.senna-section .stat-n{color:var(--s2)}.hamilton-section .stat-n{color:var(--h1)}.shawn-section .stat-n{color:var(--m1)}.leclerc-section .stat-n{color:var(--l1)}
+
+/* ── SVG DECORATIONS ── */
+.circuit-deco{position:absolute;right:0;bottom:0;width:580px;height:580px;opacity:.07;pointer-events:none}
+.speed-lines{position:absolute;right:-60px;top:50%;transform:translateY(-50%);opacity:.07;pointer-events:none}
+.music-staff{position:absolute;right:0;top:50%;transform:translateY(-50%);opacity:.06;pointer-events:none}
+.ferrari-deco{position:absolute;right:0;bottom:0;opacity:.07;pointer-events:none}
+
+/* ── DECO STRIP ── */
+.deco-strip{overflow:hidden;opacity:.055;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;font-size:4.5rem;font-weight:900;letter-spacing:.06em;border-top:1px solid rgba(255,255,255,.05);padding:.8rem 0}
+.deco-inner{display:inline-flex;animation:mscroll 25s linear infinite}
+.deco-strip:hover .deco-inner{animation-play-state:paused}
+@keyframes mscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.senna-section .deco-strip{color:var(--s2)}.hamilton-section .deco-strip{color:var(--h1)}.shawn-section .deco-strip{color:var(--m1)}.leclerc-section .deco-strip{color:var(--l1)}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 2rem}
+.section{padding:6rem 0}
+.sh{margin-bottom:4rem}
+.s-label{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.65rem;margin-bottom:.6rem}
+.s-label::before{content:'';width:18px;height:1px;background:currentColor;display:block}
+.s-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:700;line-height:1.1}
+
+/* ── ACHIEVEMENTS ── */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05);overflow:hidden}
+.ach-card{background:var(--surface);padding:1.8rem 1.4rem;position:relative;overflow:hidden;transition:background .3s}
+.ach-card:hover{background:var(--surface2)}
+.ach-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.ach-val{font-family:'Barlow Condensed',sans-serif;font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:.25rem;display:block}
+.ach-lbl{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block}
+.senna-section .ach-val{color:var(--s2)}.hamilton-section .ach-val{color:var(--h1)}.shawn-section .ach-val{color:var(--m1)}.leclerc-section .ach-val{color:var(--l1)}
+.ach-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;pointer-events:none}
+.ach-card:hover::before{opacity:1}
+.senna-section .ach-card:hover::before{background:radial-gradient(ellipse at 0 100%,rgba(0,156,59,.1),transparent 70%)}
+.hamilton-section .ach-card:hover::before{background:radial-gradient(ellipse at 0 100%,rgba(0,210,190,.1),transparent 70%)}
+.shawn-section .ach-card:hover::before{background:radial-gradient(ellipse at 0 100%,rgba(200,145,58,.1),transparent 70%)}
+.leclerc-section .ach-card:hover::before{background:radial-gradient(ellipse at 0 100%,rgba(220,0,0,.1),transparent 70%)}
+
+/* ── TIMELINE ── */
+.tl-grid{display:grid;grid-template-columns:1fr 1fr;position:relative}
+.tl-grid::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.06)}
+.tl-item{padding:2.5rem 3.5rem;position:relative;opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}
+.tl-item.vis{opacity:1;transform:none}
+.tl-item:nth-child(odd){text-align:right;padding-right:4rem}
+.tl-item:nth-child(even){padding-left:4rem}
+.tl-item::after{content:'';position:absolute;width:11px;height:11px;border-radius:50%;border:2px solid var(--bg);top:2.9rem}
+.tl-item:nth-child(odd)::after{right:-6px}.tl-item:nth-child(even)::after{left:-6px}
+.senna-section .tl-item::after{background:var(--s2)}.hamilton-section .tl-item::after{background:var(--h1)}.shawn-section .tl-item::after{background:var(--m1)}.leclerc-section .tl-item::after{background:var(--l1)}
+.tl-bg-year{position:absolute;font-family:'Barlow Condensed',sans-serif;font-size:3.2rem;font-weight:900;opacity:.06;top:.8rem;pointer-events:none}
+.tl-item:nth-child(odd) .tl-bg-year{right:3.5rem}.tl-item:nth-child(even) .tl-bg-year{left:3.5rem}
+.senna-section .tl-bg-year{color:var(--s2)}.hamilton-section .tl-bg-year{color:var(--h1)}.shawn-section .tl-bg-year{color:var(--m1)}.leclerc-section .tl-bg-year{color:var(--l1)}
+.tl-tag{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:.22rem .55rem;border-radius:2px;display:inline-block;margin-bottom:.7rem}
+.senna-section .tl-tag{background:rgba(0,156,59,.18);color:var(--s1)}.hamilton-section .tl-tag{background:rgba(0,210,190,.12);color:var(--h1)}.shawn-section .tl-tag{background:rgba(200,145,58,.18);color:var(--m1)}.leclerc-section .tl-tag{background:rgba(220,0,0,.15);color:#ff6666}
+.tl-head{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:.45rem;line-height:1.3}
+.tl-body{font-size:.82rem;color:rgba(242,237,230,.5);line-height:1.78}
+.tl-feat .tl-head{font-size:1.25rem}
+.tl-feat::after{width:15px!important;height:15px!important}
+.tl-feat:nth-child(odd)::after{right:-8px!important}.tl-feat:nth-child(even)::after{left:-8px!important}
+.tl-full{grid-column:span 2;text-align:center!important;padding:3rem 5rem!important;border-top:1px solid rgba(255,255,255,.05)}
+.tl-full::after{display:none}
+
+/* ── QUOTE BANNER ── */
+.qbanner{padding:5rem 2rem;position:relative;overflow:hidden;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+.qbanner-num{position:absolute;font-family:'Playfair Display',serif;font-size:20rem;font-weight:900;line-height:1;top:50%;right:3rem;transform:translateY(-50%);opacity:.03;pointer-events:none;user-select:none}
+.senna-section .qbanner-num{color:var(--s2)}.hamilton-section .qbanner-num{color:var(--h1)}.shawn-section .qbanner-num{color:var(--m1)}.leclerc-section .qbanner-num{color:var(--l1)}
+.qinner{max-width:860px;margin:0 auto;position:relative;z-index:2}
+.qmark{font-family:'Playfair Display',serif;font-size:7rem;line-height:.5;font-style:italic;opacity:.18;display:block;margin-bottom:.8rem}
+.senna-section .qmark{color:var(--s2)}.hamilton-section .qmark{color:var(--h1)}.shawn-section .qmark{color:var(--m1)}.leclerc-section .qmark{color:var(--l1)}
+.qtext{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,2rem);font-style:italic;line-height:1.55;margin-bottom:1.25rem}
+.qattr{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.8rem}
+.qattr::before{content:'';width:25px;height:1px;background:var(--muted)}
+
+/* ── RIVALS GRID ── */
+.rivals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.rcard{border:1px solid rgba(255,255,255,.06);padding:1.4rem;background:var(--surface);transition:border-color .3s,background .3s;position:relative;overflow:hidden;border-radius:2px}
+.rcard:hover{background:var(--surface2)}
+.senna-section .rcard:hover{border-color:rgba(0,156,59,.3)}.hamilton-section .rcard:hover{border-color:rgba(0,210,190,.3)}.shawn-section .rcard:hover{border-color:rgba(200,145,58,.3)}.leclerc-section .rcard:hover{border-color:rgba(220,0,0,.3)}
+.rcard-top{display:flex;align-items:center;gap:.9rem;margin-bottom:.7rem}
+.ravatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:900;flex-shrink:0}
+.senna-section .ravatar{background:rgba(0,156,59,.12);color:var(--s1);border:1px solid rgba(0,156,59,.2)}
+.hamilton-section .ravatar{background:rgba(0,210,190,.08);color:var(--h1);border:1px solid rgba(0,210,190,.18)}
+.shawn-section .ravatar{background:rgba(200,145,58,.1);color:var(--m1);border:1px solid rgba(200,145,58,.2)}
+.leclerc-section .ravatar{background:rgba(220,0,0,.1);color:#ff6666;border:1px solid rgba(220,0,0,.2)}
+.rname{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.rrole{font-size:.68rem;color:var(--muted)}
+.rdesc{font-size:.8rem;color:rgba(242,237,230,.48);line-height:1.65}
+.rtag{position:absolute;top:.7rem;right:.7rem;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;padding:.18rem .45rem;border-radius:100px}
+.senna-section .rtag{background:rgba(0,156,59,.15);color:var(--s1)}.hamilton-section .rtag{background:rgba(0,210,190,.1);color:var(--h1)}.shawn-section .rtag{background:rgba(200,145,58,.1);color:var(--m1)}.leclerc-section .rtag{background:rgba(220,0,0,.12);color:#ff6666}
+
+/* ── OPINION ── */
+.op-wrap{display:grid;grid-template-columns:1fr 1.3fr;gap:5rem;align-items:start}
+.verdict{padding:1.8rem;border-left:3px solid;margin-bottom:2rem}
+.senna-section .verdict{border-color:var(--s2);background:rgba(255,223,0,.03)}.hamilton-section .verdict{border-color:var(--h1);background:rgba(0,210,190,.03)}.shawn-section .verdict{border-color:var(--m1);background:rgba(200,145,58,.03)}.leclerc-section .verdict{border-color:var(--l1);background:rgba(220,0,0,.03)}
+.vscore{font-family:'Barlow Condensed',sans-serif;font-size:3.8rem;font-weight:900;line-height:1}
+.senna-section .vscore{color:var(--s2)}.hamilton-section .vscore{color:var(--h1)}.shawn-section .vscore{color:var(--m1)}.leclerc-section .vscore{color:var(--l1)}
+.vsub{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.traits{display:flex;flex-direction:column;gap:.8rem}
+.trait{display:flex;flex-direction:column;gap:.35rem}
+.trait-top{display:flex;justify-content:space-between;font-size:.7rem}
+.trait-name{color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.trait-val{font-weight:600}
+.senna-section .trait-val{color:var(--s2)}.hamilton-section .trait-val{color:var(--h1)}.shawn-section .trait-val{color:var(--m1)}.leclerc-section .trait-val{color:var(--l1)}
+.trait-bar{height:2px;background:rgba(255,255,255,.08);border-radius:1px;overflow:hidden}
+.trait-fill{height:100%;border-radius:1px;width:0;transition:width 1.3s cubic-bezier(.16,1,.3,1)}
+.senna-section .trait-fill{background:linear-gradient(90deg,var(--s1),var(--s2))}.hamilton-section .trait-fill{background:linear-gradient(90deg,var(--h3),var(--h1))}.shawn-section .trait-fill{background:linear-gradient(90deg,var(--m3),var(--m1))}.leclerc-section .trait-fill{background:linear-gradient(90deg,var(--l3),var(--l1))}
+.op-text p{font-size:.9rem;color:rgba(242,237,230,.58);line-height:1.92;margin-bottom:1.2rem}
+.op-text .lead{font-size:1.05rem;color:var(--text);font-weight:500;line-height:1.75}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid rgba(255,255,255,.05);padding:2.5rem 2rem;text-align:center}
+footer p{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* ── UTILS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s,transform .65s}
+.reveal.vis{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .tl-grid{grid-template-columns:1fr}.tl-grid::before{left:1rem}
+  .tl-item:nth-child(odd),.tl-item:nth-child(even){text-align:left;padding:2rem 1.5rem 2rem 3rem}
+  .tl-item::after,.tl-item:nth-child(odd)::after,.tl-item:nth-child(even)::after{left:-1px!important;right:auto!important}
+  .tl-bg-year{display:none}.tl-full{padding:2rem 1.5rem!important}
+  .op-wrap{grid-template-columns:1fr}.phero-img,.phero-fade{display:none}
+  .stats-bar{flex-wrap:wrap}.nav-tab{padding:.4rem .7rem;font-size:.65rem}
+}
+</style>
 </head>
 <body>
 
 <!-- ═══════════ HERO ═══════════ -->
-<section class="hero" id="top">
-  <div class="hero-bg"></div>
+<section class="hero">
   <div class="hero-grid"></div>
+  <div class="hglows"><span></span><span></span><span></span><span></span></div>
   <div class="hero-content">
     <p class="hero-eyebrow">Trajetórias que marcaram a história</p>
     <h1 class="hero-title">
-      <span>Senna</span>
-      <span>Hamilton</span>
-      <span>Mendes</span>
+      <span class="line" onclick="showP('senna')">Senna</span>
+      <span class="line" onclick="showP('hamilton')">Hamilton</span>
+      <span class="line" onclick="showP('leclerc')">Leclerc</span>
+      <span class="line" onclick="showP('shawn')">Mendes</span>
     </h1>
-    <p class="hero-sub">Do nascimento à lenda — vidas que transcenderam o comum</p>
-    <div class="hero-scroll" onclick="document.getElementById('main').scrollIntoView({behavior:'smooth'})">
-      <span>Explorar</span>
-      <div class="scroll-line"></div>
+    <p class="hero-sub">Do nascimento à lenda — quatro vidas, quatro legados</p>
+    <div class="hero-dots">
+      <div class="hdot" onclick="showP('senna')" title="Ayrton Senna"></div>
+      <div class="hdot" onclick="showP('hamilton')" title="Lewis Hamilton"></div>
+      <div class="hdot" onclick="showP('leclerc')" title="Charles Leclerc"></div>
+      <div class="hdot" onclick="showP('shawn')" title="Shawn Mendes"></div>
     </div>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('nav').scrollIntoView({behavior:'smooth'})">
+    <div class="mouse"><div class="wheel"></div></div>
+    <span>Rolar</span>
   </div>
 </section>
 
 <!-- ═══════════ NAV ═══════════ -->
-<nav id="main">
+<nav id="nav">
   <div class="nav-inner">
-    <span class="nav-logo">Lendas em Movimento</span>
+    <span class="nav-logo">Lendas</span>
     <div class="nav-tabs">
-      <button class="nav-tab active" data-pilot="senna"   onclick="showPilot('senna')">Senna</button>
-      <button class="nav-tab"        data-pilot="hamilton" onclick="showPilot('hamilton')">Hamilton</button>
-      <button class="nav-tab"        data-pilot="shawn"   onclick="showPilot('shawn')">Shawn Mendes</button>
+      <button class="nav-tab active" data-p="senna"   onclick="showP('senna')">Senna</button>
+      <button class="nav-tab"        data-p="hamilton" onclick="showP('hamilton')">Hamilton</button>
+      <button class="nav-tab"        data-p="leclerc"  onclick="showP('leclerc')">Leclerc</button>
+      <button class="nav-tab"        data-p="shawn"   onclick="showP('shawn')">Shawn Mendes</button>
     </div>
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════════
+<!-- ═══════════════════════════════
      SENNA
-══════════════════════════════════════════ -->
-<div class="pilot-section senna-section active" id="sec-senna">
-  <div class="checkered"></div>
-
-  <!-- Profile Header -->
-  <div class="profile-header">
-    <div class="senna-bg" style="position:absolute;inset:0;opacity:.06;background:radial-gradient(ellipse at 80% 30%, var(--senna-main), transparent 60%)"></div>
-    <div class="profile-header-inner">
-      <div class="profile-image-wrap">
-        <img class="profile-image"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ayrton_Senna_1991_Canada.jpg/600px-Ayrton_Senna_1991_Canada.jpg"
-          alt="Ayrton Senna"
-          onerror="this.src='https://placehold.co/340x453/0d0d0d/009c3b?text=Senna'"/>
-        <div class="profile-badge">41</div>
-      </div>
-      <div class="profile-info fade-in">
-        <p class="profile-category">Fórmula 1 · Brasil</p>
-        <h2 class="profile-name">Ayrton<br>Senna</h2>
-        <p class="profile-tagline">
-          Três vezes campeão mundial, patrono da velocidade e símbolo eterno do Brasil. Uma vida breve que deixou uma marca permanente no automobilismo e na alma de uma nação.
-        </p>
-        <div class="profile-stats">
-          <div class="stat">
-            <span class="stat-value">3×</span>
-            <span class="stat-label">Campeão Mundial</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value">65</span>
-            <span class="stat-label">Vitórias na F1</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value">80</span>
-            <span class="stat-label">Poles Position</span>
-          </div>
-        </div>
-        <div class="tag-list">
-          <span class="tag">Fórmula 1</span>
-          <span class="tag">McLaren</span>
-          <span class="tag">Williams</span>
-          <span class="tag">Brasil</span>
-        </div>
+═══════════════════════════════ -->
+<div class="psec senna-section active" id="sec-senna">
+  <div class="phero">
+    <div style="position:absolute;inset:0;opacity:.03;background:repeating-conic-gradient(#fff 0% 25%,#000 0% 50%) 0 0/28px 28px;pointer-events:none"></div>
+    <svg class="circuit-deco" viewBox="0 0 580 580" fill="none"><path d="M520 80Q545 80 545 105L545 290Q545 400 440 400L180 400Q85 400 85 290L85 190Q85 130 150 110L390 80Q480 60 520 80Z" stroke="#FFDF00" stroke-width="3.5" fill="none"/><path d="M520 80Q545 80 545 105L545 290Q545 400 440 400L180 400Q85 400 85 290L85 190Q85 130 150 110L390 80Q480 60 520 80Z" stroke="#009c3b" stroke-width="1.5" fill="none" stroke-dasharray="9 14" opacity=".7"/><circle cx="520" cy="80" r="6" fill="#FFDF00" opacity=".9"/><circle cx="85" cy="190" r="4" fill="#009c3b" opacity=".9"/><circle cx="440" cy="400" r="4" fill="#009c3b" opacity=".9"/><line x1="520" y1="65" x2="520" y2="95" stroke="#FFDF00" stroke-width="3"/><circle cx="300" cy="240" r="60" stroke="#009c3b" stroke-width="1" fill="none" opacity=".3"/><circle cx="300" cy="240" r="40" stroke="#002776" stroke-width="1" fill="none" opacity=".3"/></svg>
+    <img class="phero-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ayrton_Senna_1991_Canada.jpg/600px-Ayrton_Senna_1991_Canada.jpg" alt="Ayrton Senna" onerror="this.style.display='none'"/>
+    <div class="phero-fade"></div><div class="phero-bottom"></div>
+    <div class="emblem" style="color:var(--s2)">S</div>
+    <div class="phero-content">
+      <div class="nbadge">🇧🇷 Brasil · São Paulo</div>
+      <p class="p-eyebrow">Fórmula 1 · 1960 — 1994</p>
+      <h2 class="p-name">Ayrton<em>Senna</em></h2>
+      <p class="p-tagline">Tricampeão mundial de F1. O piloto mais rápido sob a chuva. Uma lenda que transcendeu o esporte e tornou-se patrimônio da humanidade.</p>
+      <div class="stats-bar">
+        <div class="stat-item"><span class="stat-n" data-target="3">0</span><span class="stat-l">Títulos Mundiais</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="65">0</span><span class="stat-l">Vitórias F1</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="80">0</span><span class="stat-l">Poles Position</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="161">0</span><span class="stat-l">Corridas</span></div>
       </div>
     </div>
   </div>
-
-  <div class="section-divider"><div class="divider-line"></div></div>
-
-  <!-- Timeline -->
-  <div class="timeline-section">
-    <p class="section-label">Trajetória</p>
-    <h3 class="section-title">Do nascimento à lenda</h3>
-    <div class="timeline">
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1960</p>
-        <h4 class="timeline-event-title">O nascimento de uma lenda</h4>
-        <p class="timeline-event-desc">Ayrton Senna da Silva nasce em 21 de março em São Paulo, Brasil. Filho de uma família de classe média alta, cresce rodeado de amor e com uma paixão precoce por motores.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1973</p>
-        <h4 class="timeline-event-title">Primeiros passos no kart</h4>
-        <p class="timeline-event-desc">Aos 13 anos, recebe seu primeiro kart e descobre imediatamente um talento extraordinário. A velocidade torna-se um chamado, não apenas um hobbie.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1981</p>
-        <h4 class="timeline-event-title">Mudança para a Inglaterra</h4>
-        <p class="timeline-event-desc">Deixa o Brasil para perseguir o sonho da Fórmula 1. Pilota na Fórmula Ford 1600 britânica e conquista o campeonato de imediato, revelando um talento excepcional em pistas molhadas.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1984</p>
-        <h4 class="timeline-event-title">Estreia na Fórmula 1 — Toleman</h4>
-        <p class="timeline-event-desc">Faz sua estreia na F1 pela equipe Toleman. Chama atenção mundial no GP de Mônaco ao desafiar Alain Prost na chuva, antes de a corrida ser interrompida — gerando uma das maiores polêmicas da era.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1985</p>
-        <h4 class="timeline-event-title">Lotus e a primeira vitória</h4>
-        <p class="timeline-event-desc">Ingressa na Lotus e vence seu primeiro Grande Prêmio em Portugal, sob chuva intensa. O domínio nas condições adversas já era inconfundível.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1988</p>
-        <h4 class="timeline-event-title">McLaren e o primeiro título mundial</h4>
-        <p class="timeline-event-desc">Ao lado de Alain Prost na McLaren-Honda, vive a temporada mais dominante da história. Conquista 8 vitórias em 16 corridas e o título de Campeão Mundial de F1, com uma rivalidade épica que dividia o paddock.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1990–1991</p>
-        <h4 class="timeline-event-title">Segundo e terceiro títulos</h4>
-        <p class="timeline-event-desc">Conquista o bicampeonato em 1990 após uma controversa colisão com Prost no Japão, e o tricampeonato em 1991 em uma temporada de alta performance, estabelecendo-se como um dos maiores de todos os tempos.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1992–1993</p>
-        <h4 class="timeline-event-title">Lutas e resiliência</h4>
-        <p class="timeline-event-desc">Enfrenta anos difíceis com um McLaren menos competitivo, mas ainda assim entrega performances memoráveis — incluindo uma das maiores corridas da história em Donington Park, em 1993, superando cinco carros na primeira volta.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1994</p>
-        <h4 class="timeline-event-title">A tragédia de Ímola</h4>
-        <p class="timeline-event-desc">Senna assina com a Williams para a temporada de 1994. Em 1º de maio, durante o GP de San Marino em Ímola, sofre um acidente fatal. O mundo para. Ele falece aos 34 anos, deixando para sempre um legado de paixão, humanidade e velocidade incomparável.</p>
-      </div>
-
+  <div class="deco-strip" aria-hidden="true"><div class="deco-inner"><span>SENNA · BRASIL · McLAREN · WILLIAMS · MÔNACO · ÍMOLA · INTERLAGOS · 1988 · 1990 · 1991 · CAMPEÃO MUNDIAL · SENNA · BRASIL · McLAREN · WILLIAMS · MÔNACO · ÍMOLA · INTERLAGOS · 1988 · 1990 · 1991 · CAMPEÃO MUNDIAL ·&nbsp;</span><span>SENNA · BRASIL · McLAREN · WILLIAMS · MÔNACO · ÍMOLA · INTERLAGOS · 1988 · 1990 · 1991 · CAMPEÃO MUNDIAL · SENNA · BRASIL · McLAREN · WILLIAMS · MÔNACO · ÍMOLA · INTERLAGOS · 1988 · 1990 · 1991 · CAMPEÃO MUNDIAL ·&nbsp;</span></div></div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Conquistas</p><h3 class="s-title">Números que definem uma geração</h3></div>
+    <div class="ach-grid">
+      <div class="ach-card reveal"><span class="ach-icon">🏆</span><span class="ach-val">3×</span><span class="ach-lbl">Campeão Mundial F1</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🏁</span><span class="ach-val">65</span><span class="ach-lbl">Vitórias na F1</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">⚡</span><span class="ach-val">80</span><span class="ach-lbl">Poles Position</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🌧️</span><span class="ach-val">#1</span><span class="ach-lbl">Melhor sob chuva</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🇧🇷</span><span class="ach-val">6×</span><span class="ach-lbl">Vencedor em Interlagos</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">📅</span><span class="ach-val">10</span><span class="ach-lbl">Temporadas na F1</span></div>
     </div>
   </div>
-
-  <div class="section-divider"><div class="divider-line"></div></div>
-
-  <!-- Opinion -->
-  <div class="opinion-section">
-    <div class="opinion-bg"></div>
-    <div class="opinion-inner">
-      <div class="fade-in">
-        <p class="section-label">Legado & Opinião</p>
-        <h3 class="section-title" style="font-size:1.9rem">O que Senna<br>representa</h3>
-        <blockquote>
-          "A corrida é a minha vida. Não há nada antes, não há nada depois."
-          <cite>— Ayrton Senna</cite>
-        </blockquote>
-      </div>
-      <div class="opinion-text fade-in">
-        <p class="opinion-highlight">Ayrton Senna não era apenas um piloto de Fórmula 1 — era uma força da natureza dentro de um cockpit. Sua combinação única de talento bruto, intensidade psicológica e profundidade espiritual colocou-o numa categoria que pouquíssimos atletas já habitaram.</p>
-        <p>A forma como Senna encarava a pista era quase filosófica. Para ele, cada corrida era uma busca por perfeição absoluta — e quando atingia esse estado, parecia literalmente flutuar sobre o asfalto enquanto os demais lutavam contra ele. O GP de Mônaco sob chuva em 1984 e a extraordinária volta de abertura em Donington em 1993 são provas de que ele pilotava num nível que outros simplesmente não podiam acessar.</p>
-        <p>Além da velocidade, Senna revelou uma humanidade profunda. Doou silenciosamente milhões para crianças pobres do Brasil, chorou na frente das câmeras, dividiu suas vulnerabilidades. Era apaixonado, complexo e absolutamente autêntico — qualidades raras no mundo do automobilismo.</p>
-        <p>Trinta anos após Ímola, seu nome ainda arranca lágrimas no Brasil. Isso diz tudo.</p>
-      </div>
+  <div class="section">
+    <div class="wrap"><div class="sh reveal"><p class="s-label">Trajetória</p><h3 class="s-title">Do karting ao olimpo</h3></div></div>
+    <div class="wrap"><div class="tl-grid">
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">1960</span><span class="tl-tag">Nascimento</span><h4 class="tl-head">São Paulo, 21 de março de 1960</h4><p class="tl-body">Ayrton Senna da Silva nasce no bairro do Brooklin, São Paulo. Filho de Milton e Neide Senna, cresce numa família de classe média alta com uma relação precoce e instintiva com motores.</p></div>
+      <div class="tl-item reveal"><span class="tl-bg-year">1973</span><span class="tl-tag">Kart</span><h4 class="tl-head">O primeiro kart aos 13 anos</h4><p class="tl-body">Recebe um kart adaptado por seu pai. A precisão e a intuição em pista já encantavam todos que o viam — algo que especialistas descreveram como instinto puro e inato.</p></div>
+      <div class="tl-item reveal"><span class="tl-bg-year">1981</span><span class="tl-tag">Inglaterra</span><h4 class="tl-head">Rumo à Fórmula Ford</h4><p class="tl-body">Deixa o Brasil para a Inglaterra e conquista a Fórmula Ford 1600 no primeiro ano, seguida da F3 — revelando um talento que o paddock europeu nunca vira antes.</p></div>
+      <div class="tl-item reveal"><span class="tl-bg-year">1984</span><span class="tl-tag">Estreia F1</span><h4 class="tl-head">Toleman e a chuva de Mônaco</h4><p class="tl-body">Estreia pela Toleman. No GP de Mônaco sob chuva, recupera posições de forma sobrenatural e ameaça ultrapassar Prost quando a corrida é encerrada — o mundo havia descoberto algo extraordinário.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">1988</span><span class="tl-tag">Título I</span><h4 class="tl-head">McLaren — 1.º Título Mundial</h4><p class="tl-body">Na McLaren-Honda, vence 8 das 16 corridas numa temporada de dominância histórica. Início da maior rivalidade do automobilismo: o "Professor" Prost vs. o apaixonado "Mágico".</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">1991</span><span class="tl-tag">Título III</span><h4 class="tl-head">Tricampeão — Choro em Interlagos</h4><p class="tl-body">Terceiro título conquistado com maestria. Vence o GP do Brasil e chora no pódio diante de sua nação — uma das imagens mais tocantes da história do esporte.</p></div>
+      <div class="tl-item reveal"><span class="tl-bg-year">1993</span><span class="tl-tag">Obra-prima</span><h4 class="tl-head">A volta de Donington</h4><p class="tl-body">No GP da Europa, larga em 5.º e ultrapassa cinco carros numa única volta sob chuva para assumir a liderança. Unanimemente considerada a maior volta de corrida da história.</p></div>
+      <div class="tl-item tl-full reveal"><span class="tl-tag">1 de maio de 1994 · Ímola</span><h4 class="tl-head" style="font-size:1.4rem;margin-top:.75rem">A tragédia que parou o mundo</h4><p class="tl-body" style="max-width:580px;margin:.5rem auto 0">Senna sofre um acidente fatal na curva Tamburello durante o GP de San Marino. Morre aos 34 anos. O Brasil entrou em luto, a F1 jamais voltou a ser a mesma — mas sua alma ainda acelera em cada pista do mundo.</p></div>
+    </div></div>
+  </div>
+  <div class="qbanner"><div class="qbanner-num">88</div><div class="qinner"><span class="qmark">"</span><p class="qtext">A corrida é uma guerra. Mas dentro do carro, no limite, você encontra uma paz inexplicável. É onde eu me torno completo.</p><p class="qattr"><span>Ayrton Senna</span></p></div></div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Rivalidades & Conexões</p><h3 class="s-title">Os que cruzaram seu caminho</h3></div>
+    <div class="rivals-grid">
+      <div class="rcard reveal"><span class="rtag">Rival</span><div class="rcard-top"><div class="ravatar">AP</div><div><div class="rname">Alain Prost</div><div class="rrole">McLaren / Williams</div></div></div><p class="rdesc">A maior rivalidade da F1. O "Professor" contra o "Mágico" — dois estilos opostos que polarizaram o mundo do automobilismo por anos.</p></div>
+      <div class="rcard reveal"><span class="rtag">Rival</span><div class="rcard-top"><div class="ravatar">NS</div><div><div class="rname">Nigel Mansell</div><div class="rrole">Williams</div></div></div><p class="rdesc">Rivalidade marcante em pista. Mansell frequentemente entrou em conflito direto com Senna — tanto no asfalto quanto nos bastidores do paddock.</p></div>
+      <div class="rcard reveal"><span class="rtag">Sonho</span><div class="rcard-top"><div class="ravatar">FW</div><div><div class="rname">Frank Williams</div><div class="rrole">Williams Racing</div></div></div><p class="rdesc">Senna sempre sonhou em correr pela Williams. Em 1994, finalmente realizou o sonho — tragicamente, na última equipe que pilotaria.</p></div>
+      <div class="rcard reveal"><span class="rtag">Legado</span><div class="rcard-top"><div class="ravatar">IS</div><div><div class="rname">Instituto Senna</div><div class="rrole">Fundado por Viviane Senna, 1994</div></div></div><p class="rdesc">O verdadeiro legado de Ayrton. Já beneficiou mais de 20 milhões de crianças no Brasil com educação de qualidade.</p></div>
+    </div>
+  </div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Análise & Opinião</p><h3 class="s-title">O que faz de Senna uma lenda eterna</h3></div>
+    <div class="op-wrap">
+      <div class="reveal"><div class="verdict"><div class="vscore">10/10</div><div class="vsub">Legado histórico</div></div><div class="traits"><div class="trait"><div class="trait-top"><span class="trait-name">Velocidade bruta</span><span class="trait-val">100%</span></div><div class="trait-bar"><div class="trait-fill" data-w="100"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Pilotagem sob chuva</span><span class="trait-val">100%</span></div><div class="trait-bar"><div class="trait-fill" data-w="100"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Intensidade mental</span><span class="trait-val">98%</span></div><div class="trait-bar"><div class="trait-fill" data-w="98"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Carisma & legado</span><span class="trait-val">100%</span></div><div class="trait-bar"><div class="trait-fill" data-w="100"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Consistência</span><span class="trait-val">89%</span></div><div class="trait-bar"><div class="trait-fill" data-w="89"></div></div></div></div></div>
+      <div class="op-text reveal"><p class="lead">Ayrton Senna não era apenas o piloto mais rápido de sua era — era uma força da natureza. Sua combinação de talento absoluto, profundidade psicológica e humanidade tocante colocou-o numa dimensão que pouquíssimos atletas já habitaram.</p><p>Em pista molhada, tornava-se literalmente intocável — uma característica que os especialistas concordam ser incomparável na história do automobilismo. A volta de Donington em 1993 e o GP de Mônaco de 1984 permanecem como as maiores obras-primas de pilotagem já realizadas.</p><p>Além da velocidade, havia uma profundidade emocional rara. Senna chorava, rezava e falava sobre Deus e a morte com franqueza desconcertante. Essa vulnerabilidade o tornou humano — e, paradoxalmente, ainda maior.</p><p>Trinta anos após Ímola, seu nome ainda arranca lágrimas no Brasil. Isso diz tudo sobre o que significa uma lenda verdadeira.</p></div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
+<!-- ═══════════════════════════════
      HAMILTON
-══════════════════════════════════════════ -->
-<div class="pilot-section hamilton-section" id="sec-hamilton">
-  <div class="checkered"></div>
-
-  <div class="profile-header">
-    <div style="position:absolute;inset:0;opacity:.06;background:radial-gradient(ellipse at 80% 30%, var(--hamilton-main), transparent 60%)"></div>
-    <div class="profile-header-inner">
-      <div class="profile-image-wrap">
-        <img class="profile-image"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg/600px-Lewis_Hamilton_2016_Malaysia_2.jpg"
-          alt="Lewis Hamilton"
-          onerror="this.src='https://placehold.co/340x453/0d0d0d/00D2BE?text=Hamilton'"/>
-        <div class="profile-badge">7×</div>
+═══════════════════════════════ -->
+<div class="psec hamilton-section" id="sec-hamilton">
+  <div class="phero">
+    <svg class="speed-lines" viewBox="0 0 450 600" fill="none" width="450" height="600"><text x="220" y="330" text-anchor="middle" font-family="serif" font-size="220" font-weight="900" fill="#00D2BE" opacity=".12">7</text><line x1="0" y1="90" x2="450" y2="68" stroke="#00D2BE" stroke-width=".8" opacity="1"/><line x1="0" y1="140" x2="450" y2="115" stroke="#00D2BE" stroke-width="1.5" opacity=".7"/><line x1="0" y1="190" x2="450" y2="170" stroke="#00D2BE" stroke-width="2.5" opacity=".45"/><line x1="0" y1="240" x2="450" y2="220" stroke="#c0c0c0" stroke-width=".8" opacity=".9"/><line x1="0" y1="420" x2="450" y2="400" stroke="#00D2BE" stroke-width="1.2" opacity=".8"/><line x1="0" y1="470" x2="450" y2="455" stroke="#c0c0c0" stroke-width=".6" opacity="1"/><line x1="0" y1="510" x2="450" y2="498" stroke="#00D2BE" stroke-width="2" opacity=".5"/></svg>
+    <img class="phero-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg/600px-Lewis_Hamilton_2016_Malaysia_2.jpg" alt="Lewis Hamilton" onerror="this.style.display='none'"/>
+    <div class="phero-fade" style="background:linear-gradient(90deg,var(--bg) 30%,rgba(10,10,10,.68) 60%,rgba(10,10,10,.35) 100%)"></div>
+    <div class="phero-bottom"></div>
+    <div class="emblem" style="color:var(--h1)">H</div>
+    <div class="phero-content">
+      <div class="nbadge">🇬🇧 Reino Unido · Stevenage</div>
+      <p class="p-eyebrow">Fórmula 1 · 1985 — Presente</p>
+      <h2 class="p-name">Lewis<em>Hamilton</em></h2>
+      <p class="p-tagline">O maior campeão da história da F1 em títulos e vitórias. Pioneiro, ativista, artista. Redefiniu o que significa ser um piloto no século XXI.</p>
+      <div class="stats-bar">
+        <div class="stat-item"><span class="stat-n" data-target="7">0</span><span class="stat-l">Títulos Mundiais</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="105">0</span><span class="stat-l">Vitórias F1</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="104">0</span><span class="stat-l">Poles Position</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="20">0</span><span class="stat-l">Temporadas</span></div>
       </div>
-      <div class="profile-info fade-in">
-        <p class="profile-category">Fórmula 1 · Reino Unido</p>
-        <h2 class="profile-name">Lewis<br>Hamilton</h2>
-        <p class="profile-tagline">
-          O maior vencedor da Fórmula 1 em número de títulos e vitórias. Pioneiro, ativista, estilista — Hamilton redefiniu o que significa ser um piloto de corrida no século XXI.
-        </p>
-        <div class="profile-stats">
-          <div class="stat">
-            <span class="stat-value">7×</span>
-            <span class="stat-label">Campeão Mundial</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value">105</span>
-            <span class="stat-label">Vitórias na F1</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value">104</span>
-            <span class="stat-label">Poles Position</span>
-          </div>
-        </div>
-        <div class="tag-list">
-          <span class="tag">Fórmula 1</span>
-          <span class="tag">Mercedes</span>
-          <span class="tag">McLaren</span>
-          <span class="tag">Ferrari</span>
-        </div>
+    </div>
+  </div>
+  <div class="deco-strip" aria-hidden="true"><div class="deco-inner"><span>HAMILTON · MERCEDES · McLAREN · FERRARI · 7× CAMPEÃO · STEVENAGE · 2008 · 2014 · 2015 · 2017 · 2018 · 2019 · 2020 · SILVERSTONE · SUZUKA · INTERLAGOS · HAMILTON ·&nbsp;</span><span>HAMILTON · MERCEDES · McLAREN · FERRARI · 7× CAMPEÃO · STEVENAGE · 2008 · 2014 · 2015 · 2017 · 2018 · 2019 · 2020 · SILVERSTONE · SUZUKA · INTERLAGOS · HAMILTON ·&nbsp;</span></div></div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Conquistas</p><h3 class="s-title">Os recordes que definem uma era</h3></div>
+    <div class="ach-grid">
+      <div class="ach-card reveal"><span class="ach-icon">👑</span><span class="ach-val">7×</span><span class="ach-lbl">Campeão Mundial F1</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🏁</span><span class="ach-val">105</span><span class="ach-lbl">Vitórias na F1</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">⚡</span><span class="ach-val">104</span><span class="ach-lbl">Poles Position</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🎖️</span><span class="ach-val">197</span><span class="ach-lbl">Pódios totais</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🌍</span><span class="ach-val">#1</span><span class="ach-lbl">Mais vitórias da história</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">✊</span><span class="ach-val">Sir</span><span class="ach-lbl">Cavaleiro do Império</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="wrap"><div class="sh reveal"><p class="s-label">Trajetória</p><h3 class="s-title">Do subúrbio de Stevenage ao topo do mundo</h3></div></div>
+    <div class="wrap"><div class="tl-grid">
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">1985</span><span class="tl-tag">Nascimento</span><h4 class="tl-head">7 de janeiro de 1985, Stevenage</h4><p class="tl-body">Lewis Carl Davidson Hamilton nasce em Stevenage, Hertfordshire. Filho de Anthony Hamilton, de origem jamaicana. A família tem recursos limitados — o pai trabalhará múltiplos empregos para financiar o sonho do filho.</p></div>
+      <div class="tl-item reveal"><span class="tl-bg-year">1993</span><span class="tl-tag">Lenda</span><h4 class="tl-head">O guardanapo de Ron Dennis</h4><p class="tl-body">Aos 8 anos, aborda Ron Dennis numa cerimônia e pede para ser piloto da McLaren. Dennis anota num guardanapo — e, contra todo o esperado, cumpre a promessa.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2007</span><span class="tl-tag">Estreia F1</span><h4 class="tl-head">A temporada de estreia que chocou o mundo</h4><p class="tl-body">Estreia na McLaren e quase vence o campeonato já no primeiro ano. Perde o título por apenas 1 ponto para Räikkönen no último GP — a performance de um novato jamais vista na F1.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2008</span><span class="tl-tag">Título I</span><h4 class="tl-head">O drama de Interlagos</h4><p class="tl-body">Conquista o campeonato na última volta do último GP no Brasil, ultrapassando Glock para ficar em 5.º e garantir o título por 1 ponto sobre Massa. Cenas históricas.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2014</span><span class="tl-tag">Dominância</span><h4 class="tl-head">Seis títulos em sete anos na Mercedes</h4><p class="tl-body">Após assinar com a Mercedes em 2013 — decisão ridicularizada na época — conquista seis títulos mundiais (2014, 2015, 2017, 2018, 2019, 2020), superando o recorde histórico de Schumacher.</p></div>
+      <div class="tl-item reveal"><span class="tl-bg-year">2021</span><span class="tl-tag">Polêmica</span><h4 class="tl-head">Abu Dhabi — a derrota mais dolorosa</h4><p class="tl-body">Perde o 8.º título para Verstappen na última volta do último GP, após decisão controversa da direção de corrida — gerando o maior debate da história moderna da F1.</p></div>
+      <div class="tl-item tl-full reveal"><span class="tl-tag">2025 — Presente</span><h4 class="tl-head" style="font-size:1.4rem;margin-top:.75rem">Ferrari — O capítulo mais romântico</h4><p class="tl-body" style="max-width:580px;margin:.5rem auto 0">Assina com a Ferrari em 2025, ao lado de Leclerc, realizando o sonho de todo piloto. A temporada foi difícil, mas o 8.º título histórico continua sendo o objetivo para 2026.</p></div>
+    </div></div>
+  </div>
+  <div class="qbanner"><div class="qbanner-num">7</div><div class="qinner"><span class="qmark">"</span><p class="qtext">Eu vim do nada. Cresci numa cidade humilde, num mundo que não esperava que alguém como eu chegasse até aqui. Por isso cada vitória significa algo diferente.</p><p class="qattr"><span>Lewis Hamilton</span></p></div></div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Rivalidades & Conexões</p><h3 class="s-title">Os que moldaram sua trajetória</h3></div>
+    <div class="rivals-grid">
+      <div class="rcard reveal"><span class="rtag">Rival</span><div class="rcard-top"><div class="ravatar">NR</div><div><div class="rname">Nico Rosberg</div><div class="rrole">Mercedes</div></div></div><p class="rdesc">Companheiro de equipe e rival interno. Rosberg venceu o campeonato de 2016 numa batalha que quase destruiu a Mercedes por dentro — e logo depois se aposentou.</p></div>
+      <div class="rcard reveal"><span class="rtag">Rival</span><div class="rcard-top"><div class="ravatar">MV</div><div><div class="rname">Max Verstappen</div><div class="rrole">Red Bull Racing</div></div></div><p class="rdesc">A rivalidade da nova geração. 2021 produziu as cenas mais eletrizantes da F1 moderna — e terminou na maior polêmica da história recente do esporte.</p></div>
+      <div class="rcard reveal"><span class="rtag">Parceiro</span><div class="rcard-top"><div class="ravatar">TW</div><div><div class="rname">Toto Wolff</div><div class="rrole">Mercedes AMG Petronas</div></div></div><p class="rdesc">Juntos construíram a equipe mais bem-sucedida da F1 moderna — uma parceria baseada em confiança, respeito e ambição compartilhada.</p></div>
+      <div class="rcard reveal"><span class="rtag">Companheiro</span><div class="rcard-top"><div class="ravatar">CL</div><div><div class="rname">Charles Leclerc</div><div class="rrole">Ferrari — 2025</div></div></div><p class="rdesc">A parceria mais esperada de 2025 na Ferrari. Hamilton jamais fora consistentemente batido por um companheiro de equipe — e Leclerc se manteve à frente durante toda a temporada.</p></div>
+    </div>
+  </div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Análise & Opinião</p><h3 class="s-title">Por que Hamilton é o maior de todos</h3></div>
+    <div class="op-wrap">
+      <div class="reveal"><div class="verdict"><div class="vscore">GOAT</div><div class="vsub">Greatest Of All Time</div></div><div class="traits"><div class="trait"><div class="trait-top"><span class="trait-name">Velocidade de classificação</span><span class="trait-val">99%</span></div><div class="trait-bar"><div class="trait-fill" data-w="99"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Gestão de corrida</span><span class="trait-val">98%</span></div><div class="trait-bar"><div class="trait-fill" data-w="98"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Longevidade</span><span class="trait-val">100%</span></div><div class="trait-bar"><div class="trait-fill" data-w="100"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Impacto cultural</span><span class="trait-val">97%</span></div><div class="trait-bar"><div class="trait-fill" data-w="97"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Consistência</span><span class="trait-val">96%</span></div><div class="trait-bar"><div class="trait-fill" data-w="96"></div></div></div></div></div>
+      <div class="op-text reveal"><p class="lead">Lewis Hamilton é, numericamente, o maior piloto da história da Fórmula 1. Mas sua grandeza vai muito além dos recordes — ele redefiniu o papel do piloto como agente de mudança cultural e social.</p><p>O que mais impressiona é a longevidade. Hamilton manteve-se no topo por quase duas décadas, adaptando seu estilo a cada mudança técnica e regulatória — algo que nenhum outro campeão conseguiu fazer com a mesma consistência.</p><p>Ao falar abertamente sobre racismo, identidade e saúde mental, abriu portas que o automobilismo mantinha fechadas há décadas. Isso, talvez, seja seu título mais importante de todos.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     LECLERC
+═══════════════════════════════ -->
+<div class="psec leclerc-section" id="sec-leclerc">
+  <div class="phero">
+    <!-- Ferrari prancing horse inspired decoration -->
+    <svg class="ferrari-deco" viewBox="0 0 600 600" fill="none" width="600" height="600" style="right:-50px;bottom:-50px">
+      <!-- Monza circuit outline -->
+      <path d="M480 100 Q520 100 520 140 L520 220 Q520 260 490 270 L420 290 Q390 300 380 340 L370 400 Q360 450 310 460 L180 470 Q120 470 100 420 L80 340 Q70 280 110 260 L200 230 Q240 210 250 170 L260 110 Q270 70 310 60 L420 55 Q460 55 480 100Z" stroke="#DC0000" stroke-width="4" fill="none"/>
+      <path d="M480 100 Q520 100 520 140 L520 220 Q520 260 490 270 L420 290 Q390 300 380 340 L370 400 Q360 450 310 460 L180 470 Q120 470 100 420 L80 340 Q70 280 110 260 L200 230 Q240 210 250 170 L260 110 Q270 70 310 60 L420 55 Q460 55 480 100Z" stroke="#e8c43c" stroke-width="1.5" fill="none" stroke-dasharray="10 15" opacity=".6"/>
+      <!-- Num 16 -->
+      <text x="300" y="310" text-anchor="middle" font-family="serif" font-size="140" font-weight="900" fill="#DC0000" opacity=".12">16</text>
+      <!-- Circuit corner markers -->
+      <circle cx="480" cy="100" r="5" fill="#DC0000" opacity=".8"/>
+      <circle cx="310" cy="460" r="5" fill="#e8c43c" opacity=".8"/>
+      <circle cx="110" cy="260" r="4" fill="#DC0000" opacity=".8"/>
+      <circle cx="250" cy="170" r="4" fill="#e8c43c" opacity=".8"/>
+      <!-- SF-25 finish line -->
+      <line x1="480" y1="85" x2="480" y2="115" stroke="#DC0000" stroke-width="3.5"/>
+    </svg>
+    <img class="phero-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Charles_Leclerc_2024_Monaco.jpg/600px-Charles_Leclerc_2024_Monaco.jpg" alt="Charles Leclerc" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Charles_Leclerc%2C_Ferrari_SF71H%2C_2018_Formula_One_season.jpg/600px-Charles_Leclerc%2C_Ferrari_SF71H%2C_2018_Formula_One_season.jpg';this.onerror=null"/>
+    <div class="phero-fade" style="background:linear-gradient(90deg,var(--bg) 30%,rgba(10,10,10,.68) 60%,rgba(10,10,10,.35) 100%)"></div>
+    <div class="phero-bottom"></div>
+    <div class="emblem" style="color:var(--l1)">L</div>
+    <div class="phero-content">
+      <div class="nbadge">🇲🇨 Mônaco · Monte Carlo</div>
+      <p class="p-eyebrow">Fórmula 1 · Ferrari · 1997 — Presente</p>
+      <h2 class="p-name">Charles<em>Leclerc</em></h2>
+      <p class="p-tagline">Il Predestinato. O menino de Mônaco que cresceu para correr pela Ferrari — e se tornou o líder incontestável da Scuderia. Primeiro monegasco a vencer o GP de Mônaco em 93 anos.</p>
+      <div class="stats-bar">
+        <div class="stat-item"><span class="stat-n" data-target="8">0</span><span class="stat-l">Vitórias na F1</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="26">0</span><span class="stat-l">Poles Position</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="50">0</span><span class="stat-l">Pódios totais</span></div>
+        <div class="stat-item"><span class="stat-n">16</span><span class="stat-l">Número do piloto</span></div>
       </div>
     </div>
   </div>
 
-  <div class="section-divider"><div class="divider-line"></div></div>
+  <div class="deco-strip" aria-hidden="true"><div class="deco-inner"><span>LECLERC · FERRARI · MÔNACO · MONZA · SPA · AUSTIN · IL PREDESTINATO · 2019 · 2022 · 2024 · GP3 · F2 · HERVE · JULES BIANCHI · FERRARI ACADEMY · LECLERC ·&nbsp;</span><span>LECLERC · FERRARI · MÔNACO · MONZA · SPA · AUSTIN · IL PREDESTINATO · 2019 · 2022 · 2024 · GP3 · F2 · HERVE · JULES BIANCHI · FERRARI ACADEMY · LECLERC ·&nbsp;</span></div></div>
 
-  <div class="timeline-section">
-    <p class="section-label">Trajetória</p>
-    <h3 class="section-title">Do subúrbio de Stevenage ao topo do mundo</h3>
-    <div class="timeline">
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1985</p>
-        <h4 class="timeline-event-title">Nascimento em Stevenage</h4>
-        <p class="timeline-event-desc">Lewis Carl Davidson Hamilton nasce em 7 de janeiro em Stevenage, Hertfordshire. Filho de pai jamaicano e mãe britânica, cresce num ambiente humilde onde o pai trabalha múltiplos empregos para apoiar o sonho do filho.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1993</p>
-        <h4 class="timeline-event-title">Kart e a conversa com Ron Dennis</h4>
-        <p class="timeline-event-desc">Aos 8 anos, já é campeão britânico de kart. Com ousadia extraordinária, aborda Ron Dennis (chefe da McLaren) numa cerimônia e pede para ser piloto. Dennis anota o nome no guardanapo. Anos depois, cumpre a promessa.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1998–2005</p>
-        <h4 class="timeline-event-title">Programa de formação McLaren</h4>
-        <p class="timeline-event-desc">Ingressa no programa de jovens pilotos da McLaren e domina todas as categorias: Fórmula Renault, Fórmula 3 Européia e Fórmula 2 (GP2), conquistando títulos em cada uma delas com consistência impressionante.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2007</p>
-        <h4 class="timeline-event-title">Estreia explosiva na F1</h4>
-        <p class="timeline-event-desc">Em sua temporada de estreia pela McLaren, Hamilton quase conquista o título mundial, sendo superado por apenas um ponto por Kimi Räikkönen no último Grande Prêmio. A performance de um novato nunca vista antes.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2008</p>
-        <h4 class="timeline-event-title">Primeiro título em drama puro</h4>
-        <p class="timeline-event-desc">Conquista o campeonato no último instante do último Grande Prêmio, no Brasil, ao ultrapassar Timo Glock na volta final para ficar em 5º — e garantir o título por um único ponto sobre Felipe Massa. Cenas históricas.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2013</p>
-        <h4 class="timeline-event-title">A decisão que mudou tudo — Mercedes</h4>
-        <p class="timeline-event-desc">Surpreende o mundo ao deixar a McLaren para assinar com a Mercedes — uma equipe então sem títulos. A decisão é criticada, mas provará ser a mais inteligente de sua carreira.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2014–2020</p>
-        <h4 class="timeline-event-title">Era de dominância absoluta</h4>
-        <p class="timeline-event-desc">Com a Mercedes na era dos motores híbridos, conquista mais seis títulos mundiais (2014, 2015, 2017, 2018, 2019, 2020), igualando e superando o recorde de Schumacher. Torna-se o maior vencedor da história da F1 em vitórias e poles.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2020</p>
-        <h4 class="timeline-event-title">Ativismo e o movimento #BLM</h4>
-        <p class="timeline-event-desc">Torna-se voz ativa pelo movimento antirracismo na F1 e no esporte global, usando sua plataforma de forma corajosa — e enfrentando críticas do establishment do automobilismo. Sua voz transcende as pistas.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2021</p>
-        <h4 class="timeline-event-title">A derrota mais dolorosa</h4>
-        <p class="timeline-event-desc">Perde o oitavo título — que seria histórico — para Max Verstappen na última volta do último GP do ano, em Abu Dhabi, em circunstâncias controversas que chocaram o mundo do automobilismo.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2025</p>
-        <h4 class="timeline-event-title">A nova aventura na Ferrari</h4>
-        <p class="timeline-event-desc">Assina com a Scuderia Ferrari — o maior romance da F1 — para a temporada 2025, voltando a inflar as esperanças de um oitavo título com a equipe mais icônica do esporte.</p>
-      </div>
-
+  <!-- CONQUISTAS -->
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Conquistas</p><h3 class="s-title">O ritmo de uma estrela nascente</h3></div>
+    <div class="ach-grid">
+      <div class="ach-card reveal"><span class="ach-icon">🏆</span><span class="ach-val">2.º</span><span class="ach-lbl">Vice-campeão 2022</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🏁</span><span class="ach-val">8</span><span class="ach-lbl">Vitórias na F1</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">⚡</span><span class="ach-val">26</span><span class="ach-lbl">Poles Position</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🎖️</span><span class="ach-val">50</span><span class="ach-lbl">Pódios — 50.º em México 2025</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🇲🇨</span><span class="ach-val">1.º</span><span class="ach-lbl">Monegasco a vencer Mônaco (93 anos)</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🎹</span><span class="ach-val">EP</span><span class="ach-lbl">"Dreamers" — Billboard Classical #2</span></div>
     </div>
   </div>
 
-  <div class="section-divider"><div class="divider-line"></div></div>
+  <!-- TIMELINE -->
+  <div class="section">
+    <div class="wrap"><div class="sh reveal"><p class="s-label">Trajetória</p><h3 class="s-title">Do kart de Monte Carlo ao vermelho da Ferrari</h3></div></div>
+    <div class="wrap"><div class="tl-grid">
 
-  <div class="opinion-section">
-    <div class="opinion-bg"></div>
-    <div class="opinion-inner">
-      <div class="fade-in">
-        <p class="section-label">Legado & Opinião</p>
-        <h3 class="section-title" style="font-size:1.9rem">O que Hamilton<br>representa</h3>
-        <blockquote>
-          "Eu vim de nada. E mostrei que é possível chegar ao topo — mesmo que o sistema tente te parar."
-          <cite>— Lewis Hamilton</cite>
-        </blockquote>
+      <div class="tl-item tl-feat reveal">
+        <span class="tl-bg-year">1997</span>
+        <span class="tl-tag">Nascimento</span>
+        <h4 class="tl-head">Monte Carlo, 16 de outubro de 1997</h4>
+        <p class="tl-body">Charles Leclerc nasce em Monte Carlo, Mônaco. Seu pai, Hervé, era piloto de Fórmula 3 — e o amigo da família Jules Bianchi, que se tornaria padrinho de Charles, seria uma grande influência em sua vida e carreira.</p>
       </div>
-      <div class="opinion-text fade-in">
-        <p class="opinion-highlight">Lewis Hamilton é, numericamente, o maior piloto da história da Fórmula 1. Mas sua grandeza vai muito além das estatísticas — ele redefiniu o papel do piloto como agente de mudança social e cultural.</p>
-        <p>Do ponto de vista esportivo, o que mais impressiona em Hamilton é a longevidade. Ao contrário de outros campeões que encontraram suas janelas perfeitas de dominância, Lewis manteve-se competitivo e relevante por quase duas décadas, adaptando seu estilo, sua mentalidade e sua abordagem às circunstâncias de cada era.</p>
-        <p>Sua capacidade de salvar um carro, de ditar ritmo em condições variáveis e de elevar performances no começo de uma corrida são qualidades que o colocam em comparação direta com Senna e Schumacher — e, segundo muitos especialistas, o ultrapassam em consistência.</p>
-        <p>Mas talvez sua contribuição mais duradoura seja outra: ao falar abertamente sobre racismo no esporte, ao usar suas vitórias como palco para causas maiores, Hamilton ampliou o que um atleta pode e deve ser. Isso, para além dos troféus, é o que define uma lenda.</p>
+
+      <div class="tl-item reveal">
+        <span class="tl-bg-year">2005</span>
+        <span class="tl-tag">Kart</span>
+        <h4 class="tl-head">Prodígio desde os 5 anos</h4>
+        <p class="tl-body">Leclerc começou a correr de kart aos cinco anos e rapidamente se estabeleceu como um talento prodigioso. Conquistou múltiplos títulos regionais e nacionais, coroando-os com a Copa do Mundo Júnior de kart em 2011.</p>
+      </div>
+
+      <div class="tl-item reveal">
+        <span class="tl-bg-year">2014</span>
+        <span class="tl-tag">Monopostos</span>
+        <h4 class="tl-head">Fórmula Renault & F3 Europeia</h4>
+        <p class="tl-body">Migra para monopostos, terminando em 2.º na Fórmula Renault 2.0 Alps com duas vitórias. Em 2015, avança para o Campeonato Europeu de F3 da FIA, conquistando quatro vitórias e um pódio no histórico GP de Macau.</p>
+      </div>
+
+      <div class="tl-item tl-feat reveal">
+        <span class="tl-bg-year">2016</span>
+        <span class="tl-tag">Ferrari Academy</span>
+        <h4 class="tl-head">GP3 e a entrada na Academia Ferrari</h4>
+        <p class="tl-body">Ingressa na Ferrari Driver Academy e conquista o título da GP3 Series em seu ano de estreia. Na temporada seguinte, domina a FIA Fórmula 2 — 7 vitórias em corridas principais e 8 poles — tornando-se o primeiro piloto a vencer GP3 e F2 em temporadas de estreia consecutivas.</p>
+      </div>
+
+      <div class="tl-item tl-feat reveal">
+        <span class="tl-bg-year">2018</span>
+        <span class="tl-tag">Estreia F1</span>
+        <h4 class="tl-head">Alfa Romeo Sauber — o novato que impressionou</h4>
+        <p class="tl-body">Faz sua estreia na F1 com a Alfa Romeo Sauber aos 20 anos. Em um carro modesto, terminou notavelmente em 6.º lugar no Azerbaijão, marcou 39 pontos na temporada e superou consistentemente seu companheiro Marcus Ericsson — garantindo a promoção para a Ferrari.</p>
+      </div>
+
+      <div class="tl-item tl-feat reveal">
+        <span class="tl-bg-year">2019</span>
+        <span class="tl-tag">Ferrari · 1.ª Vitória</span>
+        <h4 class="tl-head">Spa, Monza e "Il Predestinato"</h4>
+        <p class="tl-body">Ingressa na Scuderia Ferrari como o piloto mais jovem em décadas. Conquista a 1.ª vitória em Spa-Francorchamps, dedicando-a ao seu padrinho Jules Bianchi. Segue com vitória histórica em Monza — encerrando 9 anos sem vitória Ferrari — e termina com 10 pódios e 7 poles, superando o tetracampeão Sebastian Vettel.</p>
+      </div>
+
+      <div class="tl-item reveal">
+        <span class="tl-bg-year">2022</span>
+        <span class="tl-tag">Vice-campeão</span>
+        <h4 class="tl-head">A temporada mais próxima do título</h4>
+        <p class="tl-body">Com um Ferrari competitivo, Leclerc vence no Bahrein, na Austrália e na Áustria. Lidera o campeonato por semanas, mas falhas mecânicas e erros estratégicos da Ferrari custam-lhe o título — termina vice-campeão atrás de Verstappen.</p>
+      </div>
+
+      <div class="tl-item tl-feat reveal">
+        <span class="tl-bg-year">2024</span>
+        <span class="tl-tag">Obra-prima</span>
+        <h4 class="tl-head">Mônaco, Monza, Austin — 3.º no mundial</h4>
+        <p class="tl-body">Vence o GP de Mônaco, tornando-se o primeiro monegasco a vencer a corrida em 93 anos — em sua própria casa. Soma vitórias em Monza (pela 2.ª vez) e Austin, 13 pódios ao total e termina em 3.º no campeonato com o maior número de pontos de sua carreira.</p>
+      </div>
+
+      <div class="tl-item tl-full reveal">
+        <span class="tl-tag">2025 — Presente</span>
+        <h4 class="tl-head" style="font-size:1.4rem;margin-top:.75rem">Líder da Ferrari ao lado de Hamilton</h4>
+        <p class="tl-body" style="max-width:600px;margin:.5rem auto 0">Com a chegada de Lewis Hamilton, Leclerc teve que provar que poderia superar o heptacampeão — e o fez. Manteve-se consistentemente à frente do companheiro durante toda a temporada de 2025, alcançando seu 50.º pódio no GP do México e consolidando-se como o verdadeiro líder da Scuderia. Para 2026, o lema é claro: "É agora ou nunca".</p>
+      </div>
+
+    </div></div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="qbanner">
+    <div class="qbanner-num">16</div>
+    <div class="qinner">
+      <span class="qmark">"</span>
+      <p class="qtext">Meu sonho de vida é me tornar Campeão Mundial com a Ferrari. Correr para a Ferrari é diferente — tem paixão. Nenhuma outra equipe da F1 tem tantos torcedores e entusiastas. É quase uma febre.</p>
+      <p class="qattr"><span>Charles Leclerc</span></p>
+    </div>
+  </div>
+
+  <!-- CONEXÕES -->
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Influências & Conexões</p><h3 class="s-title">Os que moldaram o piloto</h3></div>
+    <div class="rivals-grid">
+      <div class="rcard reveal">
+        <span class="rtag">Herança</span>
+        <div class="rcard-top"><div class="ravatar">HL</div><div><div class="rname">Hervé Leclerc</div><div class="rrole">Pai · Piloto de Fórmula 3</div></div></div>
+        <p class="rdesc">Piloto de F3 e primeira grande inspiração de Charles. Crescer num ambiente automobilístico criou uma ligação natural com a velocidade — e um entendimento único das dificuldades da vida num cockpit.</p>
+      </div>
+      <div class="rcard reveal">
+        <span class="rtag">Padrinho</span>
+        <div class="rcard-top"><div class="ravatar">JB</div><div><div class="rname">Jules Bianchi</div><div class="rrole">Piloto Ferrari · Padrinho</div></div></div>
+        <p class="rdesc">Amigo da família e padrinho de Charles. Bianchi foi uma inspiração profunda — quando faleceu em 2015, Leclerc dedicou sua primeira vitória na F1 à sua memória, em Spa, em 2019.</p>
+      </div>
+      <div class="rcard reveal">
+        <span class="rtag">Rival</span>
+        <div class="rcard-top"><div class="ravatar">MV</div><div><div class="rname">Max Verstappen</div><div class="rrole">Red Bull Racing</div></div></div>
+        <p class="rdesc">O principal rival de sua geração. Em 2022, travaram uma batalha pelo título que durou meio campeonato — até que as falhas mecânicas da Ferrari mudaram o rumo da história.</p>
+      </div>
+      <div class="rcard reveal">
+        <span class="rtag">Artista</span>
+        <div class="rcard-top"><div class="ravatar">🎹</div><div><div class="rname">Sofiane Pamart</div><div class="rrole">Pianista · EP "Dreamers"</div></div></div>
+        <p class="rdesc">Em 2024, lançou o EP "Dreamers" em colaboração com o pianista francês Sofiane Pamart — chegando ao #2 no Billboard Classical Albums. Leclerc também compõe sozinho peças de piano inspiradas em cada corrida.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPINION -->
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Análise & Opinião</p><h3 class="s-title">O destino de uma geração — ou mais</h3></div>
+    <div class="op-wrap">
+      <div class="reveal">
+        <div class="verdict"><div class="vscore">9.5</div><div class="vsub">Potencial histórico</div></div>
+        <div class="traits">
+          <div class="trait"><div class="trait-top"><span class="trait-name">Velocidade de classificação</span><span class="trait-val">99%</span></div><div class="trait-bar"><div class="trait-fill" data-w="99"></div></div></div>
+          <div class="trait"><div class="trait-top"><span class="trait-name">Ritmo de corrida</span><span class="trait-val">92%</span></div><div class="trait-bar"><div class="trait-fill" data-w="92"></div></div></div>
+          <div class="trait"><div class="trait-top"><span class="trait-name">Comprometimento</span><span class="trait-val">100%</span></div><div class="trait-bar"><div class="trait-fill" data-w="100"></div></div></div>
+          <div class="trait"><div class="trait-top"><span class="trait-name">Carisma & identidade</span><span class="trait-val">95%</span></div><div class="trait-bar"><div class="trait-fill" data-w="95"></div></div></div>
+          <div class="trait"><div class="trait-top"><span class="trait-name">Liderança de equipe</span><span class="trait-val">93%</span></div><div class="trait-bar"><div class="trait-fill" data-w="93"></div></div></div>
+        </div>
+      </div>
+      <div class="op-text reveal">
+        <p class="lead">Charles Leclerc é, na visão de muitos especialistas, o piloto mais completo da geração atual quando colocado num carro à altura do seu talento. Sua velocidade em classificação é comparada à de Senna e Hamilton na sua melhor fase — e isso não é exagero.</p>
+        <p>Crescido em Mônaco, filho de um piloto de F3 e apadrinhado por Jules Bianchi, Leclerc carrega uma ligação com o automobilismo que vai além do profissional. É quase filosófica. Quando venceu o GP de Mônaco em 2024, tornando-se o primeiro monegasco em 93 anos a fazê-lo, a emoção no rosto dele disse tudo que palavras não conseguiriam expressar.</p>
+        <p>Sua principal fraqueza até agora tem sido o ambiente ao redor: a Ferrari estrategicamente inconsistente custou-lhe vitórias certas em 2022, e um SF-25 aquém das expectativas em 2025 o impediu de brigar pelo título ao lado de Hamilton. O talento está lá — e permanece.</p>
+        <p>Fora da pista, Leclerc surpreende pela dimensão artística: compõe peças ao piano inspiradas em cada corrida e lançou um EP bem-recebido. É um piloto moderno, multidimensional e com uma história que ainda está no segundo capítulo. O melhor de Charles Leclerc ainda está por vir.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
+<!-- ═══════════════════════════════
      SHAWN MENDES
-══════════════════════════════════════════ -->
-<div class="pilot-section shawn-section" id="sec-shawn">
-  <div class="music-deco">♪</div>
-
-  <div class="profile-header">
-    <div style="position:absolute;inset:0;opacity:.06;background:radial-gradient(ellipse at 80% 30%, var(--shawn-main), transparent 60%)"></div>
-    <div class="profile-header-inner">
-      <div class="profile-image-wrap">
-        <img class="profile-image"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Shawn_Mendes_2019_by_Glenn_Francis.jpg/600px-Shawn_Mendes_2019_by_Glenn_Francis.jpg"
-          alt="Shawn Mendes"
-          onerror="this.src='https://placehold.co/340x453/0d0d0d/c8913a?text=Shawn'"/>
-        <div class="profile-badge">♪</div>
-      </div>
-      <div class="profile-info fade-in">
-        <p class="profile-category">Músico · Canadá</p>
-        <h2 class="profile-name">Shawn<br>Mendes</h2>
-        <p class="profile-tagline">
-          De Vine ao Madison Square Garden — Shawn Mendes construiu uma carreira meteórica com sua guitarra, sua voz e uma autenticidade rara numa indústria que raramente a recompensa.
-        </p>
-        <div class="profile-stats">
-          <div class="stat">
-            <span class="stat-value">4</span>
-            <span class="stat-label">Álbuns de estúdio</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value">100M+</span>
-            <span class="stat-label">Ouvintes mensais</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value">2014</span>
-            <span class="stat-label">Início da carreira</span>
-          </div>
-        </div>
-        <div class="tag-list">
-          <span class="tag">Pop</span>
-          <span class="tag">Folk Pop</span>
-          <span class="tag">Guitarra</span>
-          <span class="tag">Canadá</span>
-        </div>
+═══════════════════════════════ -->
+<div class="psec shawn-section" id="sec-shawn">
+  <div class="phero">
+    <svg class="music-staff" viewBox="0 0 520 620" fill="none" width="520" height="620" style="right:0;top:50%;transform:translateY(-50%)">
+      <line x1="0" y1="130" x2="520" y2="130" stroke="#c8913a" stroke-width="1.2"/><line x1="0" y1="155" x2="520" y2="155" stroke="#c8913a" stroke-width="1.2"/><line x1="0" y1="180" x2="520" y2="180" stroke="#c8913a" stroke-width="1.2"/><line x1="0" y1="205" x2="520" y2="205" stroke="#c8913a" stroke-width="1.2"/><line x1="0" y1="230" x2="520" y2="230" stroke="#c8913a" stroke-width="1.2"/>
+      <text x="20" y="215" font-size="110" fill="#c8913a" opacity=".35" font-family="serif">𝄞</text>
+      <ellipse cx="130" cy="128" rx="11" ry="8" fill="#c8913a" opacity=".85"/><line x1="141" y1="128" x2="141" y2="80" stroke="#c8913a" stroke-width="2.5" opacity=".85"/>
+      <ellipse cx="210" cy="153" rx="11" ry="8" fill="#c8913a" opacity=".65"/><line x1="221" y1="153" x2="221" y2="105" stroke="#c8913a" stroke-width="2.5" opacity=".65"/>
+      <ellipse cx="300" cy="178" rx="11" ry="8" fill="#c8913a" opacity=".85"/><line x1="311" y1="178" x2="311" y2="130" stroke="#c8913a" stroke-width="2.5" opacity=".85"/>
+      <ellipse cx="380" cy="128" rx="11" ry="8" fill="#c8913a" opacity=".6"/><line x1="391" y1="128" x2="391" y2="80" stroke="#c8913a" stroke-width="2.5" opacity=".6"/>
+      <ellipse cx="460" cy="202" rx="11" ry="8" fill="#c8913a" opacity=".75"/><line x1="471" y1="202" x2="471" y2="154" stroke="#c8913a" stroke-width="2.5" opacity=".75"/>
+      <line x1="0" y1="380" x2="520" y2="380" stroke="#c8913a" stroke-width="1" opacity=".7"/><line x1="0" y1="405" x2="520" y2="405" stroke="#c8913a" stroke-width="1" opacity=".7"/><line x1="0" y1="430" x2="520" y2="430" stroke="#c8913a" stroke-width="1" opacity=".7"/><line x1="0" y1="455" x2="520" y2="455" stroke="#c8913a" stroke-width="1" opacity=".7"/><line x1="0" y1="480" x2="520" y2="480" stroke="#c8913a" stroke-width="1" opacity=".7"/>
+      <ellipse cx="160" cy="378" rx="10" ry="7" fill="#c8913a" opacity=".55"/><line x1="170" y1="378" x2="170" y2="335" stroke="#c8913a" stroke-width="2" opacity=".55"/>
+      <ellipse cx="295" cy="403" rx="10" ry="7" fill="#c8913a" opacity=".55"/><line x1="305" y1="403" x2="305" y2="360" stroke="#c8913a" stroke-width="2" opacity=".55"/>
+      <ellipse cx="415" cy="428" rx="10" ry="7" fill="#c8913a" opacity=".55"/><line x1="425" y1="428" x2="425" y2="385" stroke="#c8913a" stroke-width="2" opacity=".55"/>
+    </svg>
+    <img class="phero-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Shawn_Mendes_2019_by_Glenn_Francis.jpg/600px-Shawn_Mendes_2019_by_Glenn_Francis.jpg" alt="Shawn Mendes" onerror="this.style.display='none'"/>
+    <div class="phero-fade" style="background:linear-gradient(90deg,var(--bg) 30%,rgba(10,10,10,.68) 60%,rgba(10,10,10,.35) 100%)"></div>
+    <div class="phero-bottom"></div>
+    <div class="emblem" style="color:var(--m1)">M</div>
+    <div class="phero-content">
+      <div class="nbadge">🇨🇦 Canadá · Pickering, Ontario</div>
+      <p class="p-eyebrow">Músico & Compositor · 1998 — Presente</p>
+      <h2 class="p-name">Shawn<em>Mendes</em></h2>
+      <p class="p-tagline">Do Vine ao Madison Square Garden. Filho de mãe inglesa e pai português, Shawn construiu um dos maiores legados do pop moderno com guitarra, autenticidade e uma voz que fala diretamente à sua geração.</p>
+      <div class="stats-bar">
+        <div class="stat-item"><span class="stat-n" data-target="4">0</span><span class="stat-l">Álbuns de estúdio</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="3">0</span><span class="stat-l">Grammy Nominado</span></div>
+        <div class="stat-item"><span class="stat-n">100M+</span><span class="stat-l">Ouvintes Mensais</span></div>
+        <div class="stat-item"><span class="stat-n" data-target="15">0</span><span class="stat-l">Anos na estreia Billboard</span></div>
       </div>
     </div>
   </div>
-
-  <div class="section-divider"><div class="divider-line"></div></div>
-
-  <div class="timeline-section">
-    <p class="section-label">Trajetória</p>
-    <h3 class="section-title">Da garagem de Toronto ao mundo</h3>
-    <div class="timeline">
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">1998</p>
-        <h4 class="timeline-event-title">Nascimento em Pickering, Ontario</h4>
-        <p class="timeline-event-desc">Shawn Peter Raul Mendes nasce em 8 de agosto em Pickering, Ontario, Canadá. Cresce numa família simples com raízes portuguesas e britânicas, com uma infância marcada pela música que sempre tocava em casa.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2010–2012</p>
-        <h4 class="timeline-event-title">A descoberta do violão</h4>
-        <p class="timeline-event-desc">Aprende a tocar violão aos 13 anos, majoritariamente por tutoriais no YouTube. Em pouco tempo, o que era passatempo torna-se obsessão. Ele começa a compor suas próprias canções no quarto.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2013</p>
-        <h4 class="timeline-event-title">O fenômeno do Vine</h4>
-        <p class="timeline-event-desc">Começa a postar covers de 6 segundos na plataforma Vine — e explode. Em meses, acumula milhões de seguidores. A internet estava descobrindo um talento genuíno escondido num adolescente canadense.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2014</p>
-        <h4 class="timeline-event-title">Island Records e o primeiro EP</h4>
-        <p class="timeline-event-desc">Assina com a Island Records ainda adolescente e lança seu primeiro EP homônimo. A single "Life of the Party" estreia direto no Top 25 da Billboard Hot 100 — sem qualquer divulgação em rádio. Um recorde histórico para um artista debutante.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2015</p>
-        <h4 class="timeline-event-title">Álbum de estreia — "Handwritten"</h4>
-        <p class="timeline-event-desc">Lança "Handwritten", que debuta em #1 na Billboard 200, tornando-se um dos artistas mais jovens a alcançar esse feito. A single "Stitches" atinge o Top 5 em vários países e revela sua habilidade em construir melodias que ficam.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2016</p>
-        <h4 class="timeline-event-title">"Illuminate" e a maturidade sonora</h4>
-        <p class="timeline-event-desc">Segundo álbum de estúdio, "Illuminate", consolida sua voz mais madura, mesclando folk pop e soul. Inicia sua primeira grande turnê mundial, demonstrando que a transição do internet star para artista de arena foi completamente bem-sucedida.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2018</p>
-        <h4 class="timeline-event-title">"Shawn Mendes" — O salto artístico</h4>
-        <p class="timeline-event-desc">Seu terceiro álbum homônimo representa um salto criativo significativo. "In My Blood" — uma balada sobre ansiedade e saúde mental — vira um hino geracional. O álbum lhe rende indicações ao Grammy e dois shows sold-out no Madison Square Garden.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2020</p>
-        <h4 class="timeline-event-title">"Wonder" e a vulnerabilidade como força</h4>
-        <p class="timeline-event-desc">Lança "Wonder", seu álbum mais introspectivo e pessoal, durante a pandemia. A narrativa audiovisual ao redor do projeto demonstra um artista disposto a arriscar e a expor suas vulnerabilidades criativamente.</p>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2022</p>
-        <h4 class="timeline-event-title">Pausa e saúde mental</h4>
-        <p class="timeline-event-desc">Cancela sua tour mundial para cuidar de sua saúde mental — uma decisão corajosa e pública que quebra o tabu no mundo da música pop. Retira-se temporariamente dos holofotes para se reconstruir.</p>
-      </div>
-
-      <div class="timeline-item highlight">
-        <div class="timeline-dot"></div>
-        <p class="timeline-year">2023–hoje</p>
-        <h4 class="timeline-event-title">Retorno e renascimento</h4>
-        <p class="timeline-event-desc">Retorna com novos singles e performances ao vivo renovadas, mostrando um artista transformado. Sua história de priorizar o bem-estar sobre a fama ressoa com uma geração que cobra autenticidade acima de tudo.</p>
-      </div>
-
+  <div class="deco-strip" aria-hidden="true"><div class="deco-inner"><span>SHAWN MENDES · PICKERING · HANDWRITTEN · ILLUMINATE · WONDER · IN MY BLOOD · STITCHES · SEÑORITA · VINE · ISLAND RECORDS · GRAMMY · TORONTO · LIFE OF THE PARTY · CANADA ·&nbsp;</span><span>SHAWN MENDES · PICKERING · HANDWRITTEN · ILLUMINATE · WONDER · IN MY BLOOD · STITCHES · SEÑORITA · VINE · ISLAND RECORDS · GRAMMY · TORONTO · LIFE OF THE PARTY · CANADA ·&nbsp;</span></div></div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Discografia & Conquistas</p><h3 class="s-title">Uma carreira que não conhece teto</h3></div>
+    <div class="ach-grid">
+      <div class="ach-card reveal"><span class="ach-icon">💿</span><span class="ach-val">4</span><span class="ach-lbl">Álbuns de estúdio</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">📊</span><span class="ach-val">#1</span><span class="ach-lbl">Billboard Hot 100 — 15 anos</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🏆</span><span class="ach-val">3×</span><span class="ach-lbl">Grammy Nominado</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🌐</span><span class="ach-val">100M</span><span class="ach-lbl">Ouvintes mensais Spotify</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🎸</span><span class="ach-val">2×</span><span class="ach-lbl">MSG Sold Out</span></div>
+      <div class="ach-card reveal"><span class="ach-icon">🌟</span><span class="ach-val">TCA</span><span class="ach-lbl">Teen Choice — Web Star</span></div>
     </div>
   </div>
-
-  <div class="section-divider"><div class="divider-line"></div></div>
-
-  <div class="opinion-section">
-    <div class="opinion-bg"></div>
-    <div class="opinion-inner">
-      <div class="fade-in">
-        <p class="section-label">Legado & Opinião</p>
-        <h3 class="section-title" style="font-size:1.9rem">O que Shawn<br>representa</h3>
-        <blockquote>
-          "Eu só quero ser honesto sobre o que sinto. Se as pessoas se identificam com isso, fico grato."
-          <cite>— Shawn Mendes</cite>
-        </blockquote>
-      </div>
-      <div class="opinion-text fade-in">
-        <p class="opinion-highlight">Shawn Mendes é um fenômeno que os algoritmos não conseguem explicar completamente. Sua ascensão partiu das redes sociais, mas o que o sustentou foi algo que nenhum algoritmo fabrica: autenticidade genuína e talento real.</p>
-        <p>Numa indústria que frequentemente molda artistas em produtos consumíveis, Shawn insistiu em escrever suas próprias músicas, tocar seu próprio violão e falar sobre o que realmente sente. Isso o diferenciou dos contemporâneos de sua geração de internet e lhe garantiu um lugar em arenas globais.</p>
-        <p>Seus temas — ansiedade, amor, identidade, saúde mental — tocam diretamente numa geração que cresceu conectada mas solitária. Músicas como "In My Blood" funcionam como espelhos emocionais para milhões de pessoas que encontraram nelas a linguagem para sentimentos que não sabiam nomear.</p>
-        <p>O capítulo mais corajoso de sua trajetória foi, paradoxalmente, o da pausa. Ao priorizar sua saúde mental sobre contratos e fama, Shawn enviou uma mensagem poderosa que vai muito além da música: que o cuidado próprio é força, não fraqueza. Isso, mais do que qualquer disco, pode ser seu legado mais duradouro.</p>
-      </div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Família & Origens</p><h3 class="s-title">As raízes que formaram o artista</h3></div>
+    <div class="rivals-grid">
+      <div class="rcard reveal"><span class="rtag">Mãe</span><div class="rcard-top"><div class="ravatar">KM</div><div><div class="rname">Karen Mendes</div><div class="rrole">Inglesa · Comércio Imobiliário</div></div></div><p class="rdesc">Inglesa dedicada ao comércio imobiliário. Karen foi um dos pilares afetivos de Shawn durante a adolescência, acompanhando os primeiros passos da carreira musical do filho ainda muito jovem.</p></div>
+      <div class="rcard reveal"><span class="rtag">Pai</span><div class="rcard-top"><div class="ravatar">MM</div><div><div class="rname">Manuel Mendes</div><div class="rrole">Português · Empresário em Toronto</div></div></div><p class="rdesc">Português e empresário na área de suprimentos para restaurantes em Toronto. Manuel trouxe a herança lusitana ao lar — um dos motivos pelo qual Shawn sempre destacou suas raízes com orgulho.</p></div>
+      <div class="rcard reveal"><span class="rtag">Irmã</span><div class="rcard-top"><div class="ravatar">AA</div><div><div class="rname">Aaliyah Mendes</div><div class="rrole">Irmã mais nova</div></div></div><p class="rdesc">Irmã caçula, Aaliyah acompanhou de perto o crescimento meteórico do irmão e aparece frequentemente em momentos compartilhados nas redes sociais.</p></div>
+      <div class="rcard reveal"><span class="rtag">Influências</span><div class="rcard-top"><div class="ravatar">🎵</div><div><div class="rname">Raízes Musicais</div><div class="rrole">Led Zeppelin · Garth Brooks · Reggae</div></div></div><p class="rdesc">Em casa, cresceu ouvindo reggae, country de Garth Brooks e hard rock do Led Zeppelin. Na adolescência, descobriu John Mayer e Ed Sheeran — suas maiores influências diretas.</p></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="wrap"><div class="sh reveal"><p class="s-label">Trajetória</p><h3 class="s-title">Da garagem de Pickering ao mundo</h3></div></div>
+    <div class="wrap"><div class="tl-grid">
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">1998</span><span class="tl-tag">Nascimento</span><h4 class="tl-head">8 de agosto de 1998, Pickering</h4><p class="tl-body">Shawn Peter Raul Mendes nasce em Pickering, Ontario. Filho de Karen, inglesa ligada ao mercado imobiliário, e Manuel Mendes, português e empresário de suprimentos para restaurantes em Toronto. Cresce numa família acolhedora com raízes britânicas e lusitanas.</p></div>
+      <div class="tl-item reveal"><span class="tl-bg-year">2011</span><span class="tl-tag">YouTube</span><h4 class="tl-head">Primeiro canal e o cover de Adele</h4><p class="tl-body">Em janeiro de 2011, cria sua primeira conta no YouTube. Um ano e meio depois publica seu primeiro cover: "Hometown Glory" de Adele. O violão aprendido sozinho por tutoriais começa a ganhar audiência.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2013</span><span class="tl-tag">Vine & Magcon Tour</span><h4 class="tl-head">O fenômeno dos 6 segundos</h4><p class="tl-body">Explode no Vine com covers de 6 segundos. Participa da Magcon Tour — iniciativa de Bart Bordelon para promover criadores de vines. Andrew Gertler, da Island Records, o descobre na turnê e se torna seu empresário.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2014</span><span class="tl-tag">Estreia</span><h4 class="tl-head">"Life of the Party" — Billboard aos 15 anos</h4><p class="tl-body">Assina com a Island Records e entra no Top 25 da Billboard Hot 100 com 15 anos — tornando-se o cantor mais jovem a conquistar essa posição. Ganha o Teen Choice Awards como Melhor Estrela Musical da Web.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2015</span><span class="tl-tag">Álbum I</span><h4 class="tl-head">"Handwritten" e a turnê de Taylor Swift</h4><p class="tl-body">Álbum de estreia e parceria histórica: abre os shows da megatura "1989" de Taylor Swift. "Stitches" alcança o Top 5 em múltiplos países.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2016</span><span class="tl-tag">Álbum II</span><h4 class="tl-head">"Illuminate" — #1 na Billboard 200</h4><p class="tl-body">"Treat You Better" torna-se hino global. Em 2017, realiza a Illuminate World Tour, confirmando a transição de internet star para artista de arena.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2018</span><span class="tl-tag">Álbum III</span><h4 class="tl-head">"Shawn Mendes: The Album" — salto artístico</h4><p class="tl-body">Álbum #1 em vários países. "In My Blood" vira hino geracional sobre ansiedade, com indicação ao Grammy. Dois shows sold-out no Madison Square Garden confirmam o status de estrela mundial.</p></div>
+      <div class="tl-item tl-feat reveal"><span class="tl-bg-year">2019</span><span class="tl-tag">Deluxe · Turnê</span><h4 class="tl-head">"Señorita" — dois #1 na Billboard</h4><p class="tl-body">"If I Can't Have You" e "Señorita" com Camila Cabello alcançam o #1 na Billboard Hot 100. Realiza a Shawn Mendes: The Tour por todo o mundo.</p></div>
+      <div class="tl-item tl-full reveal"><span class="tl-tag">2022 — Presente</span><h4 class="tl-head" style="font-size:1.4rem;margin-top:.75rem">A pausa corajosa e o renascimento</h4><p class="tl-body" style="max-width:580px;margin:.5rem auto 0">Cancela sua world tour para cuidar da saúde mental — uma decisão pública que quebra um tabu enorme. Retira-se dos holofotes para se reconstruir e retorna em 2023 mais resiliente, mostrando que autenticidade sempre vence.</p></div>
+    </div></div>
+  </div>
+  <div class="qbanner"><div class="qbanner-num">♪</div><div class="qinner"><span class="qmark">"</span><p class="qtext">Escrever música é a única forma que encontrei de colocar para fora o que está dentro. Se a música me ajuda a entender a mim mesmo, espero que ajude alguém a entender a si também.</p><p class="qattr"><span>Shawn Mendes</span></p></div></div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Estilo Musical & Colaborações</p><h3 class="s-title">As influências que moldaram seu som</h3></div>
+    <div class="rivals-grid">
+      <div class="rcard reveal"><span class="rtag">Gênero</span><div class="rcard-top"><div class="ravatar">🎤</div><div><div class="rname">Pop & Folk-Pop</div><div class="rrole">Pop-rock · Folk-rock</div></div></div><p class="rdesc">Destaca-se no pop, mas sempre fez fusões com pop-rock e folk-rock — um diferencial que o separou dos artistas de plataforma de sua geração.</p></div>
+      <div class="rcard reveal"><span class="rtag">Raízes</span><div class="rcard-top"><div class="ravatar">🎸</div><div><div class="rname">Led Zeppelin & Garth Brooks</div><div class="rrole">Hard rock · Country · Reggae</div></div></div><p class="rdesc">Cresceu ouvindo o que seus pais tocavam: reggae, country de Garth Brooks e hard rock do Led Zeppelin — bases que deram profundidade ao seu som desde o início.</p></div>
+      <div class="rcard reveal"><span class="rtag">Referências</span><div class="rcard-top"><div class="ravatar">JM</div><div><div class="rname">John Mayer & Ed Sheeran</div><div class="rrole">Descobertas na adolescência</div></div></div><p class="rdesc">Suas maiores referências pessoais: a guitarra expressiva de Mayer e o storytelling íntimo de Sheeran moldaram diretamente seu estilo de composição.</p></div>
+      <div class="rcard reveal"><span class="rtag">Parceria</span><div class="rcard-top"><div class="ravatar">CC</div><div><div class="rname">Camila Cabello</div><div class="rrole">Colaboração · "Señorita" 2019</div></div></div><p class="rdesc">"Señorita" tornou-se um dos maiores hits do pop moderno, alcançando o #1 em dezenas de países. A química artística que transcendeu para um relacionamento público.</p></div>
+    </div>
+  </div>
+  <div class="section wrap">
+    <div class="sh reveal"><p class="s-label">Análise & Opinião</p><h3 class="s-title">O que Shawn Mendes representa no pop</h3></div>
+    <div class="op-wrap">
+      <div class="reveal"><div class="verdict"><div class="vscore">9.2</div><div class="vsub">Legado artístico</div></div><div class="traits"><div class="trait"><div class="trait-top"><span class="trait-name">Composição</span><span class="trait-val">93%</span></div><div class="trait-bar"><div class="trait-fill" data-w="93"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Habilidade vocal</span><span class="trait-val">90%</span></div><div class="trait-bar"><div class="trait-fill" data-w="90"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Autenticidade</span><span class="trait-val">97%</span></div><div class="trait-bar"><div class="trait-fill" data-w="97"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Impacto geracional</span><span class="trait-val">92%</span></div><div class="trait-bar"><div class="trait-fill" data-w="92"></div></div></div><div class="trait"><div class="trait-top"><span class="trait-name">Evolução artística</span><span class="trait-val">88%</span></div><div class="trait-bar"><div class="trait-fill" data-w="88"></div></div></div></div></div>
+      <div class="op-text reveal"><p class="lead">Shawn Mendes é um fenômeno que os algoritmos não conseguem explicar completamente. Sua ascensão partiu do Vine — seis segundos — mas o que o sustentou foi algo que nenhuma plataforma fabrica: talento real e autenticidade genuína.</p><p>Filho de uma inglesa e um português, criado ouvindo reggae, Led Zeppelin e Garth Brooks, Shawn construiu uma identidade musical única. Ao descobrir John Mayer e Ed Sheeran na adolescência, encontrou a linguagem para o que sentia — e não parou mais de escrever.</p><p>Numa indústria que molda artistas em produtos, ele insistiu em compor suas próprias músicas e falar sobre o que realmente sente. "In My Blood" virou hino para milhões que nunca tiveram palavras para a própria ansiedade.</p><p>O capítulo mais corajoso foi a pausa de 2022: ao priorizar a saúde mental sobre contratos e fama, Shawn enviou uma mensagem que transcende a música. Para uma geração que cobra autenticidade, esse pode ser seu legado mais duradouro.</p></div>
     </div>
   </div>
 </div>
 
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer>
-  <p>Lendas em Movimento — Trajetórias de Senna, Hamilton &amp; Shawn Mendes</p>
+  <p>Lendas em Movimento · Ayrton Senna · Lewis Hamilton · Charles Leclerc · Shawn Mendes</p>
 </footer>
 
 <script>
-  // Tab switching
-  function showPilot(pilot) {
-    document.querySelectorAll('.pilot-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('sec-' + pilot).classList.add('active');
-    document.querySelector('.nav-tab[data-pilot="' + pilot + '"]').classList.add('active');
-    document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
-    // Re-trigger animations
-    document.querySelectorAll('.timeline-item, .fade-in').forEach(el => el.classList.remove('visible'));
-    setTimeout(observeAll, 100);
-  }
-
-  // Scroll-triggered animations
-  function observeAll() {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const delay = el.dataset.delay || 0;
-          setTimeout(() => el.classList.add('visible'), delay);
-          io.unobserve(el);
-        }
-      });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.pilot-section.active .timeline-item').forEach((el, i) => {
-      el.dataset.delay = i * 80;
-      io.observe(el);
+function showP(p) {
+  document.querySelectorAll('.psec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + p).classList.add('active');
+  document.querySelector('.nav-tab[data-p="' + p + '"]').classList.add('active');
+  document.getElementById('nav').scrollIntoView({behavior:'smooth'});
+  resetAll(); setTimeout(observe, 150);
+}
+function resetAll() {
+  document.querySelectorAll('.tl-item,.reveal').forEach(el => el.classList.remove('vis'));
+  document.querySelectorAll('.trait-fill').forEach(el => { el.style.width='0'; });
+  document.querySelectorAll('.stat-n[data-target]').forEach(el => { el.textContent='0'; });
+}
+function animCount(el) {
+  const target = +el.dataset.target; if (!target) return;
+  let v = 0; const step = Math.max(1, Math.ceil(target/45));
+  const iv = setInterval(() => { v=Math.min(v+step,target); el.textContent=v; if(v>=target) clearInterval(iv); }, 28);
+}
+function observe() {
+  const active = document.querySelector('.psec.active'); if (!active) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target; const delay = (+el.dataset.i||0)*75;
+      setTimeout(() => {
+        el.classList.add('vis');
+        el.querySelectorAll('.trait-fill').forEach(b => { b.style.width=b.dataset.w+'%'; });
+        el.querySelectorAll('.stat-n[data-target]').forEach(animCount);
+      }, delay); io.unobserve(el);
     });
-
-    document.querySelectorAll('.pilot-section.active .fade-in').forEach(el => {
-      io.observe(el);
-    });
-  }
-
-  // Initial run
-  window.addEventListener('load', observeAll);
-
-  // Smooth parallax on hero
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const heroBg = document.querySelector('.hero-bg');
-    if (heroBg) heroBg.style.transform = `translateY(${scrolled * 0.3}px)`;
-  });
+  }, {threshold:0.08});
+  const fillIo = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(!e.isIntersecting) return; e.target.style.width=e.target.dataset.w+'%'; fillIo.unobserve(e.target); });
+  }, {threshold:0.1});
+  const cntIo = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(!e.isIntersecting) return; animCount(e.target); cntIo.unobserve(e.target); });
+  }, {threshold:0.5});
+  active.querySelectorAll('.tl-item, .reveal').forEach((el,i) => { el.dataset.i=i; io.observe(el); });
+  active.querySelectorAll('.trait-fill').forEach(el => fillIo.observe(el));
+  active.querySelectorAll('.stat-n[data-target]').forEach(el => cntIo.observe(el));
+}
+window.addEventListener('load', observe);
 </script>
 </body>
 </html>
